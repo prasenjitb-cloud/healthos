@@ -1,4 +1,4 @@
-from config.prompts import SYSTEM_PROMPT
+from config import SYSTEM_PROMPT
 from memory.vector_memory import add_to_memory, search_memory
 
 def generate_response(llm, user_input: str) -> str:
