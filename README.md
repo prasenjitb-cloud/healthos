@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ```
 ---
 
-## Local SLM Setup (Ollama)
+## Local SLM Setup
 
 The project currently uses a Small Language Model (SLM) for offline inference.
 
@@ -49,12 +49,32 @@ Model Used
 
 ### Step 1: Download the model from HuggingFace
 
+🔗 **Model download link**: [Tinyllama](https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf)
+
 ---
 
 ### Step 2: Place the model in
 ```bash
 models/
 └── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+```
+---
+
+## Local SLM Setup
+```bash
+models/
+└── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+
+core/
+└── chatbot.py
+
+vector_db/
+└── vector_memory.py
+
+main.py
+prompts.py
+requirements.txt
+medical_chatbot.py   # test file
 ```
 ---
 
