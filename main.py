@@ -2,8 +2,8 @@ from core.model_loader import load_tinyllama
 from core.chatbot import generate_response
 
 def main():
-    llm = load_tinyllama()
     init_memory()
+    llm = load_tinyllama()
 
     print("\n🩺 Offline Medical Assistance Chatbot")
     print("Type your health-related question.")
