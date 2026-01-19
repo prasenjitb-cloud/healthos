@@ -1,5 +1,6 @@
 from core.model_loader import load_tinyllama
 from core.chatbot import generate_response
+from memory.vector_memory import init_memory
 
 def main():
     init_memory()
