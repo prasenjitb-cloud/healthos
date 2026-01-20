@@ -5,7 +5,7 @@ def generate_response(llm, user_input: str) -> str:
     """
     Generate chatbot response using SLM and vector memory.
     """
-    past_info = search_memory(user_input)
+    past_info = memory.vector_memory.search_memory(user_input)
 
     memory_context = ""
     if past_info:
