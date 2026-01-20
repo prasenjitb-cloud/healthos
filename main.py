@@ -14,7 +14,7 @@ def load_tinyllama():
     )
 
 def main():
-    init_memory()
+    vector_db.vector_memory.init_memory()
     llm = load_tinyllama()
 
     print("\n🩺 Offline Medical Assistance Chatbot")
@@ -32,7 +32,7 @@ def main():
             print("\nChatbot: Conversation reset. Memory is retained.\n")
             continue
 
-        response = generate_response(llm, user_input)
+        response = core.chatbot.generate_response(llm, user_input)
         print("\nChatbot:", response, "\n")
 
 if __name__ == "__main__":
