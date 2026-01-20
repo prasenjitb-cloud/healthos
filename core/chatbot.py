@@ -27,6 +27,6 @@ def generate_response(llm, user_input: str) -> str:
     reply = response["choices"][0]["message"]["content"]
 
     if len(user_input.split()) > 3:
-        add_to_memory(user_input)
+        vector_db.vector_memory.add_to_memory(user_input)
 
     return reply
