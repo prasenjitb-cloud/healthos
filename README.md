@@ -11,6 +11,24 @@
 
 ---
 
+## Local SLM Setup
+```bash
+models/
+└── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+
+core/
+└── chatbot.py
+
+vector_db/
+└── vector_memory.py
+
+main.py
+prompts.py
+requirements.txt
+medical_chatbot.py   # test file
+```
+---
+
 ## Installation and ENV Setup
 
 ### 1. Clone the repository
@@ -57,24 +75,6 @@ Model Used
 ```bash
 models/
 └── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
-```
----
-
-## Local SLM Setup
-```bash
-models/
-└── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
-
-core/
-└── chatbot.py
-
-vector_db/
-└── vector_memory.py
-
-main.py
-prompts.py
-requirements.txt
-medical_chatbot.py   # test file
 ```
 ---
 
