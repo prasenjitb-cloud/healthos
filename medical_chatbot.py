@@ -1,20 +1,6 @@
 import time
 from llama_cpp import Llama
-
-SYSTEM_PROMPT = """
-You are a medical assistance chatbot designed strictly for academic evaluation.
-
-Your role:
-- Explain symptoms in a general, educational manner.
-- Provide possible health-related explanations using common medical knowledge.
-- Do NOT provide diagnoses.
-- Do NOT prescribe medications or treatments.
-- Do NOT suggest doctors or appointments.
-
-Style:
-- Calm, empathetic, structured
-- Do NOT repeat rules or policies
-"""
+from prompts import SYSTEM_PROMPT_Model_Testing
 
 MODELS = {
     "tinyllama": {
@@ -41,7 +27,7 @@ llm = Llama(
 )
 
 chat_history = [
-    {"role": "system", "content": SYSTEM_PROMPT}
+    {"role": "system", "content": SYSTEM_PROMPT_Model_Testing}
 ]
 
 def chatbot(user_input):
@@ -82,3 +68,4 @@ while True:
 
     print("\nChatbot:", reply)
     print(f"\n[Metrics] Latency: {latency}s | Tokens: {tokens} | Words: {length}\n")
+
