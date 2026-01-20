@@ -1,11 +1,11 @@
 from prompts import SYSTEM_PROMPT
-import memory.vector_memory
+import vector_db.vector_memory
 
 def generate_response(llm, user_input: str) -> str:
     """
     Generate chatbot response using SLM and vector memory.
     """
-    past_info = memory.vector_memory.search_memory(user_input)
+    past_info = vector_db.vector_memory.search_memory(user_input)
 
     memory_context = ""
     if past_info:
