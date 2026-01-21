@@ -1,6 +1,6 @@
 import time
-from llama_cpp import Llama
-from prompts import SYSTEM_PROMPT_Model_Testing
+import llama_cpp
+import prompts
 
 MODELS = {
     "tinyllama": {
@@ -17,7 +17,7 @@ MODEL_NAME = "tinyllama"
 
 model_cfg = MODELS[MODEL_NAME]
 
-llm = Llama(
+llm = llama_cpp.Llama(
     model_path=model_cfg["path"],
     n_ctx=model_cfg["n_ctx"],
     temperature=0.3,
@@ -27,7 +27,7 @@ llm = Llama(
 )
 
 chat_history = [
-    {"role": "system", "content": SYSTEM_PROMPT_Model_Testing}
+    {"role": "system", "content": prompts.SYSTEM_PROMPT_Model_Testing}
 ]
 
 def chatbot(user_input):
@@ -68,4 +68,5 @@ while True:
 
     print("\nChatbot:", reply)
     print(f"\n[Metrics] Latency: {latency}s | Tokens: {tokens} | Words: {length}\n")
+
 
