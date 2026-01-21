@@ -1,10 +1,10 @@
 import core.chatbot
 import vector_db.vector_memory
-from llama_cpp import Llama
+import llama_cpp
 
 def load_tinyllama():
   
-    return Llama(
+    return llama_cpp.Llama(
         model_path="models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
         n_ctx=2048,
         temperature=0.3,
