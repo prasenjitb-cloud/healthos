@@ -1,4 +1,4 @@
-from prompts import SYSTEM_PROMPT
+import prompts
 import vector_db.vector_memory
 
 def generate_response(llm, user_input: str) -> str:
@@ -14,7 +14,7 @@ def generate_response(llm, user_input: str) -> str:
             memory_context += f"- {info}\n"
 
     messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": prompts.SYSTEM_PROMPT},
         {"role": "system", "content": memory_context},
         {"role": "user", "content": user_input}
     ]
