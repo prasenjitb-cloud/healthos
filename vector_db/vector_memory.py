@@ -1,6 +1,6 @@
 import faiss
 import numpy as np
-from sentence_transformers import SentenceTransformer
+import sentence_transformers
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +20,7 @@ def init_memory():
     """
     global _index, _memory_store, _embedder
 
-    _embedder = SentenceTransformer("all-MiniLM-L6-v2")
+    _embedder = sentence_transformers.SentenceTransformer("all-MiniLM-L6-v2")
     _index = faiss.IndexFlatL2(DIM)
     _memory_store = []
 
