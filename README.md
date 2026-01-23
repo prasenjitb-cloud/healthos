@@ -1,16 +1,6 @@
 # HealthKart 
 ---
 
-## Getting Started
-
-### Prerequisites
-
-
-- **Python 3.12.1**  
-- **pip** (or any Python package manager)
-
----
-
 ## Project Structure
 ```bash
 models/
@@ -27,6 +17,15 @@ prompts.py
 requirements.txt
 medical_chatbot.py   # test file
 ```
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Python 3.12.1**  
+- **pip** (or any Python package manager)
+
 ---
 
 ## Installation and ENV Setup
@@ -51,27 +50,13 @@ env\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
----
 
-## Local SLM Setup
+### 5. Model Setup
 
-The project currently uses a Small Language Model (SLM) for offline inference.
+- Step 1: Download Model from Hugging Face 🔗 **Model download link**: [Tinyllama](https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf)
 
-Model Used
 
-- TinyLLaMA (1.1B, quantized GGUF)
-
-- Loaded via llama.cpp
-
-- Runs entirely on CPU
-
-### Step 1: Download the model from HuggingFace
-
-🔗 **Model download link**: [Tinyllama](https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf)
-
----
-
-### Step 2: Place the model in
+- Step 2: Place the model in 'models'
 ```bash
 models/
 └── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
@@ -84,5 +69,5 @@ python main.py
 ```
 
 ## Perfect get medical recommendation from bot ✅
-
+---
 
