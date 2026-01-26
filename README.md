@@ -6,8 +6,6 @@
 models/
 └── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
 
-core/
-└── chatbot.py
 
 vector_db/
 └── vector_memory.py
