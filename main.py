@@ -1,6 +1,6 @@
 import llama_cpp
-import vector_db
-import prompts
+import vector_db as local_vector_db
+import prompts as local_prompts
 
 def load_slm():
   
@@ -17,7 +17,7 @@ def generate_response(slm, user_input: str) -> str:
     """
     Generate chatbot response using SLM and vector memory.
     """
-    past_info = vector_db.search(user_input)
+    past_info = local_vector_db.search(user_input)
 
     memory_context = ""
     if past_info:
@@ -26,7 +26,7 @@ def generate_response(slm, user_input: str) -> str:
             memory_context += f"- {info}\n"
 
     messages = [
-        {"role": "system", "content": prompts.SYSTEM_PROMPT},
+        {"role": "system", "content": local_prompts.SYSTEM_PROMPT},
         {"role": "system", "content": memory_context},
         {"role": "user", "content": user_input}
     ]
@@ -39,12 +39,12 @@ def generate_response(slm, user_input: str) -> str:
     reply = response["choices"][0]["message"]["content"]
 
     if len(user_input.split()) > 3:
-        vector_db.add(user_input)
+        local_vector_db.add(user_input)
 
     return reply
 
 def main():
-    vector_db.init()
+    local_vector_db.init()
     slm = load_slm()
 
     print("\n🩺 Offline Medical Assistance Chatbot")
