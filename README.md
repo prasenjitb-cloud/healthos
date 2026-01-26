@@ -10,6 +10,7 @@ HEALTHOS/
 │     └── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
 │
 ├── vector_db/
+│     ├──__init__.py
 │     └── vector_memory.py
 │
 ├── tests
