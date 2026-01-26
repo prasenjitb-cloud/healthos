@@ -1,4 +1,4 @@
-import vector_db.vector_memory
+import vector_db
 import llama_cpp
 import prompts
 
@@ -17,7 +17,7 @@ def generate_response(llm, user_input: str) -> str:
     """
     Generate chatbot response using SLM and vector memory.
     """
-    past_info = vector_db.vector_memory.search_memory(user_input)
+    past_info = vector_db.search(user_input)
 
     memory_context = ""
     if past_info:
@@ -39,12 +39,12 @@ def generate_response(llm, user_input: str) -> str:
     reply = response["choices"][0]["message"]["content"]
 
     if len(user_input.split()) > 3:
-        vector_db.vector_memory.add_to_memory(user_input)
+        vector_db.add(user_input)
 
     return reply
 
 def main():
-    vector_db.vector_memory.init_memory()
+    vector_db.init()
     llm = load_tinyllama()
 
     print("\n🩺 Offline Medical Assistance Chatbot")
