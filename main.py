@@ -1,8 +1,8 @@
-import vector_db
 import llama_cpp
+import vector_db
 import prompts
 
-def load_tinyllama():
+def load_slm():
   
     return llama_cpp.Llama(
         model_path="models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
@@ -13,7 +13,7 @@ def load_tinyllama():
         verbose=False
     )
 
-def generate_response(llm, user_input: str) -> str:
+def generate_response(slm, user_input: str) -> str:
     """
     Generate chatbot response using SLM and vector memory.
     """
@@ -31,7 +31,7 @@ def generate_response(llm, user_input: str) -> str:
         {"role": "user", "content": user_input}
     ]
 
-    response = llm.create_chat_completion(
+    response = slm.create_chat_completion(
         messages=messages,
         max_tokens=300
     )
@@ -45,7 +45,7 @@ def generate_response(llm, user_input: str) -> str:
 
 def main():
     vector_db.init()
-    llm = load_tinyllama()
+    slm = load_slm()
 
     print("\n🩺 Offline Medical Assistance Chatbot")
     print("Type your health-related question.")
@@ -62,7 +62,7 @@ def main():
             print("\nChatbot: Conversation reset. Memory is retained.\n")
             continue
 
-        response = generate_response(llm, user_input)
+        response = generate_response(slm, user_input)
         print("\nChatbot:", response, "\n")
 
 if __name__ == "__main__":
