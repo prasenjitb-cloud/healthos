@@ -21,11 +21,11 @@ HEALTHOS/
 │
 ├── data
 │     ├── doctor.json
-│     └──slots.json
+│     └── slots.json
 │
 ├── booking
 │     ├── booking_service.py
-│     └──validators.py
+│     └── validators.py
 │
 ├── main.py
 ├── prompts.py
