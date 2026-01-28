@@ -14,7 +14,19 @@ HEALTHOS/
 │     └── vector_memory.py
 │
 ├── tests
-│      └── medical_chatbot.py
+│     └── medical_chatbot.py
+│
+├── core
+│     └── slm.py
+│
+├── data
+│     ├── doctor.json
+│     └──slots.json
+│
+├── booking
+│     ├── booking_service.py
+│     └──validators.py
+│
 ├── main.py
 ├── prompts.py
 ├── requirements.txt
