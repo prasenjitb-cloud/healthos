@@ -14,8 +14,8 @@ def main():
     if not booking.validators.validate_min_length(symptoms, 5, "Symptoms"):
         return
 
-    slm = core.slm.load_slm()
-    analysis = core.slm.analyze_symptoms(slm, symptoms)
+    llm = core.chatbot.load_slm()
+    analysis = core.chatbot.analyze_symptoms(llm, symptoms)
 
     description = analysis["description"]
     specialization = analysis["specialization"]
