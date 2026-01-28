@@ -1,4 +1,12 @@
+# Local LLM inference (GGUF models via llama.cpp)
 llama-cpp-python==0.3.16
+
+# Vector database for semantic memory and similarity search
 faiss-cpu==1.13.2
+
+# Text → embedding model for retrieval
 sentence-transformers==5.2.0
+
+# Numerical operations for embeddings and similarity computation
 numpy==2.4.1
+
