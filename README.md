@@ -16,9 +16,6 @@ HEALTHOS/
 ├── tests
 │     └── medical_chatbot.py
 │
-├── core
-│     └── slm.py
-│
 ├── data
 │     ├── doctor.json
 │     └── slots.json
