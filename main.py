@@ -1,5 +1,5 @@
-import booking.booking_service
-import booking.validators
+import 3rdPartyAPIs.slotbooking.booking_service
+import 3rdPartyAPIs.slotbooking.validators
 
 def load_slm():
     return llama_cpp.Llama(
@@ -35,10 +35,10 @@ def main():
     # ---- Step 1: Symptom input ----
     symptoms = input("Please describe your symptoms: ").strip()
 
-    if not booking.validators.validate_non_empty(symptoms, "Symptoms"):
+    if not 3rdPartyAPIs.slotbooking.validators.validate_non_empty(symptoms, "Symptoms"):
         return
 
-    if not booking.validators.validate_min_length(symptoms, 5, "Symptoms"):
+    if not 3rdPartyAPIs.slotbooking.validators.validate_min_length(symptoms, 5, "Symptoms"):
         return
 
     llm = load_slm()
@@ -47,7 +47,7 @@ def main():
     description = analysis["description"]
     specialization = analysis["specialization"]
 
-    if not booking.booking_service.specialization_exists(specialization):
+    if not 3rdPartyAPIs.slotbooking.booking_service.specialization_exists(specialization):
         print(
             "\n⚠️ Suggested specialization not available. "
             "Redirecting to General Medicine."
@@ -59,7 +59,7 @@ def main():
     print(f"👉 Suggested specialization: {specialization}\n")
 
     # ---- Step 2: Doctor selection (existing logic) ----
-    doctors = booking.booking_service.get_doctors_by_specialization(specialization)
+    doctors = 3rdPartyAPIs.slotbooking.booking_service.get_doctors_by_specialization(specialization)
     if not doctors:
         print("\n❌ No doctors found for this specialization.")
         return
@@ -97,11 +97,11 @@ def main():
 
     patient_name = input("\nEnter patient name: ")
 
-    if not booking.validators.validate_non_empty(patient_name, "Patient name"):
+    if not 3rdPartyAPIs.slotbooking.validators.validate_non_empty(patient_name, "Patient name"):
         return
 
 
-    success = booking.booking_service.book_slot(
+    success = 3rdPartyAPIs.slotbooking.booking_service.book_slot(
         selected_slot["slot_id"],
         patient_name
     )
