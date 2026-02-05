@@ -16,13 +16,14 @@ HEALTHOS/
 ├── tests
 │     └── medical_chatbot.py
 │
-├── data
-│     ├── doctor.json
-│     └── slots.json
-│
-├── booking
-│     ├── booking_service.py
-│     └── validators.py
+├── 3rdPartyAPIs
+│     ├── synthetic_data
+│     │        ├──doctors.json
+│     │        └── slots.json
+│     │
+│     └── slotbooking
+│              ├── booking_service.py
+│              └── validators.py
 │
 ├── main.py
 ├── prompts.py
