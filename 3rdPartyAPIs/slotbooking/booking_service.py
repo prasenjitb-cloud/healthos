@@ -1,7 +1,7 @@
 import json
 
-SLOTS_FILE = "data/slots.json"
-DOCTORS_FILE = "data/doctors.json"
+SLOTS_FILE = "3rdPartyAPIs/synthetic_data/slots.json"
+DOCTORS_FILE = "3rdPartyAPIs/synthetic_data/doctors.json"
 
 def get_doctors_by_specialization(specialization: str):
     with open(DOCTORS_FILE, "r", encoding="utf-8") as f:
