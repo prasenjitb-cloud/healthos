@@ -1,0 +1,317 @@
+[
+  {
+    "slot_id": 101,
+    "doctor_id": 1,
+    "date": "2026-02-10",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 102,
+    "doctor_id": 1,
+    "date": "2026-02-10",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 103,
+    "doctor_id": 1,
+    "date": "2026-02-10",
+    "time": "12:00",
+    "available": true
+  },
+  {
+    "slot_id": 201,
+    "doctor_id": 2,
+    "date": "2026-02-11",
+    "time": "09:30",
+    "available": true
+  },
+  {
+    "slot_id": 202,
+    "doctor_id": 2,
+    "date": "2026-02-11",
+    "time": "10:30",
+    "available": true
+  },
+  {
+    "slot_id": 203,
+    "doctor_id": 2,
+    "date": "2026-02-11",
+    "time": "11:30",
+    "available": true
+  },
+  {
+    "slot_id": 301,
+    "doctor_id": 3,
+    "date": "2026-02-12",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 302,
+    "doctor_id": 3,
+    "date": "2026-02-12",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 303,
+    "doctor_id": 3,
+    "date": "2026-02-12",
+    "time": "12:00",
+    "available": true
+  },
+  {
+    "slot_id": 401,
+    "doctor_id": 4,
+    "date": "2026-02-13",
+    "time": "10:30",
+    "available": true
+  },
+  {
+    "slot_id": 402,
+    "doctor_id": 4,
+    "date": "2026-02-13",
+    "time": "11:30",
+    "available": true
+  },
+  {
+    "slot_id": 403,
+    "doctor_id": 4,
+    "date": "2026-02-13",
+    "time": "12:30",
+    "available": true
+  },
+  {
+    "slot_id": 501,
+    "doctor_id": 5,
+    "date": "2026-02-14",
+    "time": "09:00",
+    "available": true
+  },
+  {
+    "slot_id": 502,
+    "doctor_id": 5,
+    "date": "2026-02-14",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 503,
+    "doctor_id": 5,
+    "date": "2026-02-14",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 601,
+    "doctor_id": 6,
+    "date": "2026-02-15",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 602,
+    "doctor_id": 6,
+    "date": "2026-02-15",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 603,
+    "doctor_id": 6,
+    "date": "2026-02-15",
+    "time": "12:00",
+    "available": true
+  },
+  {
+    "slot_id": 701,
+    "doctor_id": 7,
+    "date": "2026-02-16",
+    "time": "09:30",
+    "available": true
+  },
+  {
+    "slot_id": 702,
+    "doctor_id": 7,
+    "date": "2026-02-16",
+    "time": "10:30",
+    "available": true
+  },
+  {
+    "slot_id": 703,
+    "doctor_id": 7,
+    "date": "2026-02-16",
+    "time": "11:30",
+    "available": true
+  },
+  {
+    "slot_id": 801,
+    "doctor_id": 8,
+    "date": "2026-02-17",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 802,
+    "doctor_id": 8,
+    "date": "2026-02-17",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 803,
+    "doctor_id": 8,
+    "date": "2026-02-17",
+    "time": "12:00",
+    "available": true
+  },
+  {
+    "slot_id": 901,
+    "doctor_id": 9,
+    "date": "2026-02-18",
+    "time": "10:30",
+    "available": true
+  },
+  {
+    "slot_id": 902,
+    "doctor_id": 9,
+    "date": "2026-02-18",
+    "time": "11:30",
+    "available": true
+  },
+  {
+    "slot_id": 903,
+    "doctor_id": 9,
+    "date": "2026-02-18",
+    "time": "12:30",
+    "available": true
+  },
+  {
+    "slot_id": 1001,
+    "doctor_id": 10,
+    "date": "2026-02-19",
+    "time": "09:00",
+    "available": true
+  },
+  {
+    "slot_id": 1002,
+    "doctor_id": 10,
+    "date": "2026-02-19",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 1003,
+    "doctor_id": 10,
+    "date": "2026-02-19",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 1101,
+    "doctor_id": 11,
+    "date": "2026-02-20",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 1102,
+    "doctor_id": 11,
+    "date": "2026-02-20",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 1103,
+    "doctor_id": 11,
+    "date": "2026-02-20",
+    "time": "12:00",
+    "available": true
+  },
+  {
+    "slot_id": 1201,
+    "doctor_id": 12,
+    "date": "2026-02-21",
+    "time": "09:30",
+    "available": true
+  },
+  {
+    "slot_id": 1202,
+    "doctor_id": 12,
+    "date": "2026-02-21",
+    "time": "10:30",
+    "available": true
+  },
+  {
+    "slot_id": 1203,
+    "doctor_id": 12,
+    "date": "2026-02-21",
+    "time": "11:30",
+    "available": true
+  },
+  {
+    "slot_id": 1301,
+    "doctor_id": 13,
+    "date": "2026-02-22",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 1302,
+    "doctor_id": 13,
+    "date": "2026-02-22",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 1303,
+    "doctor_id": 13,
+    "date": "2026-02-22",
+    "time": "12:00",
+    "available": true
+  },
+  {
+    "slot_id": 1401,
+    "doctor_id": 14,
+    "date": "2026-02-23",
+    "time": "09:30",
+    "available": true
+  },
+  {
+    "slot_id": 1402,
+    "doctor_id": 14,
+    "date": "2026-02-23",
+    "time": "10:30",
+    "available": true
+  },
+  {
+    "slot_id": 1403,
+    "doctor_id": 14,
+    "date": "2026-02-23",
+    "time": "11:30",
+    "available": true
+  },
+  {
+    "slot_id": 1501,
+    "doctor_id": 15,
+    "date": "2026-02-24",
+    "time": "10:00",
+    "available": true
+  },
+  {
+    "slot_id": 1502,
+    "doctor_id": 15,
+    "date": "2026-02-24",
+    "time": "11:00",
+    "available": true
+  },
+  {
+    "slot_id": 1503,
+    "doctor_id": 15,
+    "date": "2026-02-24",
+    "time": "12:00",
+    "available": true
+  }
+]

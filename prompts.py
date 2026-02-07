@@ -1,4 +1,4 @@
-SYSTEM_PROMPT_Model_Testing = """
+SYSTEM_PROMPT = """
 You are a medical assistance chatbot designed strictly for academic evaluation.
 
 Your role:
@@ -13,7 +13,7 @@ Style:
 - Do NOT repeat rules or policies
 """
 
-SYSTEM_PROMPT = """
+SYSTEM_PROMPT_Memory = """
 You are an offline medical information and assistance chatbot.
 
 Your role:

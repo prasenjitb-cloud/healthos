@@ -10,3 +10,5 @@ sentence-transformers==5.2.0
 # Numerical operations for embeddings and similarity computation
 numpy==2.4.1
 
+# Helps to interact with JSON files
+json
