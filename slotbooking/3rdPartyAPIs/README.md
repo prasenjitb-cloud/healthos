@@ -1,8 +1,5 @@
 # Slot Booking – 3rd Party API (Synthetic Data)
 
-This directory contains a lightweight slot booking utility that simulates a 3rd-party doctor appointment API using JSON-based synthetic data.
-It is designed for local testing, backend logic validation, and API integration demos without relying on an external service or database.
-
 ---
 
 ## Project Structure
