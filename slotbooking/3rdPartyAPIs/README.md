@@ -14,7 +14,6 @@ It is designed for local testing, backend logic validation, and API integration 
 │   └── slots.json        
 ├── booking_system
 │   ├── booking_service.py
-│   └── validators.py 
 └── README.md
 
 
