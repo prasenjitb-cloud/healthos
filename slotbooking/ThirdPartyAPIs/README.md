@@ -5,7 +5,7 @@
 ## Project Structure
 ```bash
 
-3rdPartyAPIs/
+ThirdPartyAPIs/
 ├── synthetic_data/
 │   ├── doctors.json     
 │   └── slots.json        
