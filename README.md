@@ -17,7 +17,7 @@ HEALTHOS/
 │     └── medical_chatbot.py
 │
 ├── slotbooking
-│     └── 3rdPartyAPIs
+│     └── ThirdPartyAPIs
 │              ├── synthetic_data
 │              │       ├──doctors.json
 │              │       └── slots.json
