@@ -1,25 +1,31 @@
 import json
 
-SLOTS_FILE = "slotbooking/3rdPartyAPIs/synthetic_data/slots.json"
-DOCTORS_FILE = "slotbooking/3rdPartyAPIs/synthetic_data/doctors.json"
+SLOTS_FILE = "slotbooking/ThirdPartyAPIs/synthetic_data/slots.json"
+DOCTORS_FILE = "slotbooking/ThirdPartyAPIs/synthetic_data/doctors.json"
 
 def get_doctors_by_specialization(specialization: str):
     with open(DOCTORS_FILE, "r", encoding="utf-8") as f:
         doctors = json.load(f)
 
-    return [
-        d for d in doctors
-        if d["specialization"].lower() == specialization.lower()
-    ]
+    result = []
+
+    for d in doctors:
+        spec = d.get("specialization")
+        if spec and spec.lower() == specialization.lower():
+            result.append(d)
+
+    return result
 
 def specialization_exists(specialization: str) -> bool:
     with open(DOCTORS_FILE, "r", encoding="utf-8") as f:
         doctors = json.load(f)
 
-    return any(
-        d["specialization"].lower() == specialization.lower()
-        for d in doctors
-    )
+    for d in doctors:
+        spec = d.get("specialization")
+        if spec and spec.lower() == specialization.lower():
+            return True
+
+    return False
 
 def get_available_slots(doctor_id: int):
     with open(SLOTS_FILE, "r", encoding="utf-8") as f:

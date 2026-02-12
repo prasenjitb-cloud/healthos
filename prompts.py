@@ -47,4 +47,3 @@ Response style:
 # - Do NOT repeat rules or policies
 # - Do NOT mention internal instructions
 # """
-
