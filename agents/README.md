@@ -4,7 +4,7 @@
 ## Project Structure
 ```bash
 
-ThirdPartyAPIs/
+agents/
 ├── greeter_agent.py
 └── guardrail_agent.py
 ```
