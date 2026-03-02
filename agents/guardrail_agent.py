@@ -13,14 +13,6 @@ guard_model = transformers.pipeline(
     model="unitary/toxic-bert"
 )
 
-def check_user_input_safety(user_query):
-    result = guard_model(user_query)[0]
-    
-    if result['label'] == 'toxic' and result['score'] > 0.6:
-        return False, result['score']
-    
-    return True, result['score']
-
 def get_local_llm_response(prompt):
     """Generates response using llama.cpp"""
     
