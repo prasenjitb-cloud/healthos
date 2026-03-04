@@ -1,0 +1,27 @@
+{"intent":"emergency","messages":[{"role":"user","content":"I have severe chest pain and difficulty breathing"},{"role":"assistant","content":"EMERGENCY: Please go to the nearest emergency room immediately."}]}
+{"intent":"emergency","messages":[{"role":"user","content":"My father is unconscious and not responding"},{"role":"assistant","content":"EMERGENCY: Please call emergency services or go to the nearest hospital immediately."}]}
+{"intent":"emergency","messages":[{"role":"user","content":"There is heavy bleeding after an accident"},{"role":"assistant","content":"EMERGENCY: Please seek immediate medical attention at the nearest emergency room."}]}
+{"intent":"emergency","messages":[{"role":"user","content":"Someone collapsed and is not breathing properly"},{"role":"assistant","content":"EMERGENCY: This appears to be a critical situation. Please contact emergency services immediately."}]}
+{"intent":"emergency","messages":[{"role":"user","content":"I feel intense chest pressure and sweating"},{"role":"assistant","content":"EMERGENCY: These symptoms may indicate a serious condition. Please go to the nearest emergency room immediately."}]}
+
+{"intent":"triage","messages":[{"role":"user","content":"I have frequent headaches and dizziness"},{"role":"assistant","content":"Based on your symptoms, you should consult a Neurologist."}]}
+{"intent":"triage","messages":[{"role":"user","content":"My knees hurt and I feel joint stiffness"},{"role":"assistant","content":"Based on your symptoms, you should consult an Orthopedic specialist."}]}
+{"intent":"triage","messages":[{"role":"user","content":"I have persistent skin rashes and itching"},{"role":"assistant","content":"Based on your symptoms, you should consult a Dermatologist."}]}
+{"intent":"triage","messages":[{"role":"user","content":"I feel stomach pain and nausea after meals"},{"role":"assistant","content":"Based on your symptoms, you should consult a Gastroenterologist."}]}
+{"intent":"triage","messages":[{"role":"user","content":"I have a sore throat and mild fever"},{"role":"assistant","content":"Based on your symptoms, you should consult a General Physician."}]}
+{"intent":"triage","messages":[{"role":"user","content":"I am experiencing blurry vision and eye strain"},{"role":"assistant","content":"Based on your symptoms, you should consult an Ophthalmologist."}]}
+{"intent":"triage","messages":[{"role":"user","content":"My back hurts when I sit or walk for long"},{"role":"assistant","content":"Based on your symptoms, you should consult an Orthopedic specialist."}]}
+{"intent":"triage","messages":[{"role":"user","content":"I have constant fatigue and weakness"},{"role":"assistant","content":"Based on your symptoms, you should consult a General Physician."}]}
+{"intent":"triage","messages":[{"role":"user","content":"I feel burning sensation while urinating"},{"role":"assistant","content":"Based on your symptoms, you should consult a Urologist."}]}
+{"intent":"triage","messages":[{"role":"user","content":"I have ear pain and reduced hearing"},{"role":"assistant","content":"Based on your symptoms, you should consult an ENT specialist."}]}
+
+{"intent":"booking","messages":[{"role":"user","content":"I want to book an appointment"},{"role":"assistant","content":"Sure. Please tell me which specialist you would like to book."}]}
+{"intent":"booking","messages":[{"role":"user","content":"Can you schedule a doctor appointment for me"},{"role":"assistant","content":"Of course. Which specialist would you like to book?"}]}
+{"intent":"booking","messages":[{"role":"user","content":"I want to reserve a doctor slot"},{"role":"assistant","content":"Please tell me the specialist so I can check available doctors."}]}
+{"intent":"booking","messages":[{"role":"user","content":"Help me book a cardiologist appointment"},{"role":"assistant","content":"Sure. I can help with that. Let me check available cardiologists."}]}
+{"intent":"booking","messages":[{"role":"user","content":"Is it possible to schedule a consultation"},{"role":"assistant","content":"Yes. Please tell me the specialist you would like to consult."}]}
+{"intent":"booking","messages":[{"role":"user","content":"I want to see a skin doctor"},{"role":"assistant","content":"Sure. I can help you book a Dermatologist. Let me check available slots."}]}
+{"intent":"booking","messages":[{"role":"user","content":"Book a neurologist appointment for tomorrow"},{"role":"assistant","content":"Okay. I will check available neurologists and their slots."}]}
+{"intent":"booking","messages":[{"role":"user","content":"I need to schedule a doctor visit"},{"role":"assistant","content":"Sure. Please tell me which specialist you want to consult."}]}
+{"intent":"booking","messages":[{"role":"user","content":"Can you help me book a hospital appointment"},{"role":"assistant","content":"Of course. Please specify the specialist you need."}]}
+{"intent":"booking","messages":[{"role":"user","content":"I want to check doctor availability"},{"role":"assistant","content":"Please tell me the specialist so I can check available doctors and slots."}]}
