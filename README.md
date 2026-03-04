@@ -19,7 +19,9 @@ HEALTHOS/
 ├── agents
 │     ├── guardrail_agent.py
 │     ├── greeter_agent.py
-│     └── README.md
+│     ├── README.md
+│     └── usecases
+│            └── conversation.jsonl
 │
 ├── slotbooking
 │     └── ThirdPartyAPIs
