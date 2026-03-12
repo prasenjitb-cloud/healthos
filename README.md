@@ -7,7 +7,7 @@
 HEALTHOS/
 │
 ├── models/
-│     └── tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+│     └── BioMedLM-7B.Q4_K_M.gguf
 │
 ├── vector_db/
 │     ├──__init__.py
@@ -74,7 +74,7 @@ pip install -r requirements.txt
 
 ### 5. Model Setup
 
-- Step 1: Download Model from Hugging Face 🔗 **Model download link**: [Tinyllama](https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf)
+- Step 1: Download Model from Hugging Face 🔗 **Model download link**: [BioMedLM]((https://huggingface.co/mradermacher/BioMedLM-7B-GGUF/resolve/main/BioMedLM-7B.Q4_K_M.gguf))
 
 
 - Step 2: Place the model in 'models'
