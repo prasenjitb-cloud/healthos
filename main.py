@@ -4,7 +4,7 @@ import prompts as local_prompts
 def load_slm():
   
     return llama_cpp.Llama(
-        model_path="models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+        model_path="models/BioMedLM-7B.Q4_K_M.gguf",
         n_ctx=2048,
         temperature=0.3,
         top_p=0.9,
