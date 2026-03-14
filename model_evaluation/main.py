@@ -1,6 +1,6 @@
-import questions
 import models
 import judge
+import json
 
 def compute_score(scores):
 
@@ -17,7 +17,10 @@ def run_evaluation():
     biomed_scores = []
     tiny_scores = []
 
-    for q in questions.questions:
+    with open("testdata.json", "r") as f:
+        questions_data = json.load(f)
+
+    for q in questions_data:
 
         question = q["question"]
         reference = q["answer"]
