@@ -1,5 +1,4 @@
-questions = [
-
+[
 {
 "question": "A patient has chest pain radiating to the left arm and sweating. What is the most likely diagnosis?",
 "answer": "Myocardial infarction or heart attack"
@@ -74,5 +73,4 @@ questions = [
 "question": "What does elevated white blood cell count indicate?",
 "answer": "Infection or inflammation"
 }
-
 ]
