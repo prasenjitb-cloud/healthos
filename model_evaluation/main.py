@@ -39,17 +39,21 @@ def run_evaluation():
 
     return biomed_scores, tiny_scores
 
-biomed_scores, tiny_scores = run_evaluation()
+def main():
+    biomed_scores, tiny_scores = run_evaluation()
+    
+    biomed_avg = sum(biomed_scores) / len(biomed_scores)
+    tiny_avg = sum(tiny_scores) / len(tiny_scores)
+    
+    print("\nFINAL RESULTS")
+    
+    print("BioMedLM Average:", biomed_avg)
+    print("TinyLlama Average:", tiny_avg)
+    
+    if biomed_avg > tiny_avg:
+        print("BioMedLM performs better in medical context")
+    else:
+        print("TinyLlama performs better")
 
-biomed_avg = sum(biomed_scores) / len(biomed_scores)
-tiny_avg = sum(tiny_scores) / len(tiny_scores)
-
-print("\nFINAL RESULTS")
-
-print("BioMedLM Average:", biomed_avg)
-print("TinyLlama Average:", tiny_avg)
-
-if biomed_avg > tiny_avg:
-    print("BioMedLM performs better in medical context")
-else:
-    print("TinyLlama performs better")
+if __name__ == "__main__":
+    main()
