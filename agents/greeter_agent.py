@@ -6,14 +6,10 @@ import langgraph.graph
 
 def load_slm():
     return llama_cpp.Llama(
-        model_path="models/BioMedLM-7B.Q4_K_M.gguf",
-        n_ctx=2048,
-        n_threads=4,
-        temperature=0.0,
-        top_k=1,
-        top_p=1.0,
-        repeat_penalty=1.0,
-        verbose=False
+        model_path=BioMedLM_CONFIG["model_path"],
+        n_ctx=BioMedLM_CONFIG["n_ctx"],
+        n_threads=BioMedLM_CONFIG["n_threads"],
+        verbose=BioMedLM_CONFIG["verbose"]
     )
 
 
