@@ -1,0 +1,78 @@
+questions = [
+
+{
+"question": "A patient has chest pain radiating to the left arm and sweating. What is the most likely diagnosis?",
+"answer": "Myocardial infarction or heart attack"
+},
+
+{
+"question": "What does elevated troponin indicate?",
+"answer": "Heart muscle damage usually from myocardial infarction"
+},
+
+{
+"question": "What are common symptoms of meningitis?",
+"answer": "Fever, neck stiffness, headache, sensitivity to light"
+},
+
+{
+"question": "What is the mechanism of action of aspirin?",
+"answer": "Inhibits cyclooxygenase enzyme reducing prostaglandin synthesis"
+},
+
+{
+"question": "What does metformin treat?",
+"answer": "Type 2 diabetes by improving insulin sensitivity"
+},
+
+{
+"question": "Why are antibiotics ineffective against viruses?",
+"answer": "Antibiotics target bacterial structures not present in viruses"
+},
+
+{
+"question": "What does low hemoglobin indicate?",
+"answer": "Anemia"
+},
+
+{
+"question": "What does high fasting blood glucose indicate?",
+"answer": "Diabetes mellitus"
+},
+
+{
+"question": "What are signs of stroke?",
+"answer": "Face drooping, arm weakness, speech difficulty"
+},
+
+{
+"question": "What should be done during anaphylaxis?",
+"answer": "Administer epinephrine immediately"
+},
+
+{
+"question": "What causes type 1 diabetes?",
+"answer": "Autoimmune destruction of pancreatic beta cells"
+},
+
+{
+"question": "What is sepsis?",
+"answer": "Life threatening organ dysfunction due to infection"
+},
+
+{
+"question": "What is hypertension?",
+"answer": "Persistently elevated blood pressure"
+},
+
+{
+"question": "What causes anemia?",
+"answer": "Low red blood cells or hemoglobin"
+},
+
+{
+"question": "What does elevated white blood cell count indicate?",
+"answer": "Infection or inflammation"
+}
+
+]
