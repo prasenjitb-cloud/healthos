@@ -1,12 +1,13 @@
 import llama_cpp
 import transformers
+import config
 
 def load_slm():
     return llama_cpp.Llama(
-        model_path="models/BioMedLM-7B.Q4_K_M.gguf",
-        n_ctx=2048,
-        n_threads=4,
-        verbose=False
+        model_path=config.BioMedLM_CONFIG["model_path"],
+        n_ctx=config.BioMedLM_CONFIG["n_ctx"],
+        n_threads=config.BioMedLM_CONFIG["n_threads"],
+        verbose=config.BioMedLM_CONFIG["verbose"]
     )
 
 
