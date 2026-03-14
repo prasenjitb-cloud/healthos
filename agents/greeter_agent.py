@@ -2,14 +2,15 @@ import typing
 import json
 import llama_cpp
 import langgraph.graph
+import config
 
 
 def load_slm():
     return llama_cpp.Llama(
-        model_path=BioMedLM_CONFIG["model_path"],
-        n_ctx=BioMedLM_CONFIG["n_ctx"],
-        n_threads=BioMedLM_CONFIG["n_threads"],
-        verbose=BioMedLM_CONFIG["verbose"]
+        model_path=config.BioMedLM_CONFIG["model_path"],
+        n_ctx=config.BioMedLM_CONFIG["n_ctx"],
+        n_threads=config.BioMedLM_CONFIG["n_threads"],
+        verbose=config.BioMedLM_CONFIG["verbose"]
     )
 
 
