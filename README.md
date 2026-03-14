@@ -31,6 +31,11 @@ HEALTHOS/
 │              │
 │              └── booking_system
 │                       └── booking_service.py
+├── model_evaluation
+│     ├── judge.py
+│     ├── main.py
+│     ├── questions.py
+│     └── models.py
 │
 ├── main.py
 ├── prompts.py
