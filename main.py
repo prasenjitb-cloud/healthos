@@ -1,17 +1,20 @@
 import json
+import argparse
 import llama_cpp
 import prompts as local_prompts
 
 
-def load_config():
-    with open("config.json", "r") as f:
+def load_config(config_file):
+    with open(config_file, "r") as f:
         return json.load(f)
 
 
-def load_slm(model_name):
+def load_slm(config_data, model_name):
 
-    config = load_config()
-    model_config = config[model_name]
+    if model_name not in config_data:
+        raise ValueError(f"Config '{model_name}' not found in config file")
+
+    model_config = config_data[model_name]
 
     slm = llama_cpp.Llama(
         model_path=model_config["model_path"],
@@ -42,9 +45,32 @@ def generate_response(slm, model_config, user_input):
     return reply
 
 
+def parse_args():
+
+    parser = argparse.ArgumentParser(description="Offline Medical Chatbot")
+
+    parser.add_argument(
+        "-configfile",
+        required=True,
+        help="Path to config JSON file"
+    )
+
+    parser.add_argument(
+        "-config",
+        required=True,
+        help="Model configuration name inside config file"
+    )
+
+    return parser.parse_args()
+
+
 def main():
 
-    slm, model_config = load_slm("BioMedLM_CONFIG")
+    args = parse_args()
+
+    config_data = load_config(args.configfile)
+
+    slm, model_config = load_slm(config_data, args.config)
 
     print("\n🩺 Offline Medical Assistance Chatbot")
     print("Type your health-related question.")
