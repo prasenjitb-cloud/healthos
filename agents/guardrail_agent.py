@@ -63,7 +63,7 @@ def check_safety(guard_model, config_data, text: str):
 
 def safe_chat_flow(slm, guard_model, config_data, model_config, user_query: str):
 
-    max_retries = config_data["safety"]["max_retries"]
+    max_retries = 2
 
     input_safe, input_score = check_safety(guard_model, config_data, user_query)
 
