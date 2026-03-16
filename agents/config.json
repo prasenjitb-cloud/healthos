@@ -17,5 +17,10 @@
     "top_p": 0.9,
     "max_tokens": 300,
     "verbose": false
+  },
+
+  "guard_model": {
+    "model_name": "unitary/toxic-bert",
+    "threshold": 0.6
   }
 }
