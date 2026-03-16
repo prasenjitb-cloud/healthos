@@ -92,9 +92,25 @@ models/
 ```
 ---
 
-## How to RUN
+## How to Run
+
+Run the chatbot by specifying the configuration file and the model configuration name.
+
 ```bash
-python main.py
+python main.py -configfile config.json -config BioMedLM_CONFIG
+```
+
+### Parameters
+
+- **-configfile** → Path to the JSON configuration file containing model settings.
+- **-config** → The specific model configuration key inside the config file.
+
+### Example
+
+Run the chatbot using the TinyLlama configuration:
+
+```bash
+python main.py -configfile config.json -config TinyLlama_CONFIG
 ```
 
 ## Perfect get medical recommendation from bot ✅
