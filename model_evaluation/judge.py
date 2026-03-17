@@ -103,27 +103,6 @@ Return ONLY valid JSON.
 }
 """)
 
-
-def judge_pairwise(llm, prompt, question, reference, answer_a, answer_b):
-
-    chain = prompt | llm
-
-    response = chain.invoke({
-        "question": question,
-        "reference": reference,
-        "answer_a": answer_a,
-        "answer_b": answer_b
-    })
-
-    text = response.content
-    print("JUDGE RAW OUTPUT:\n", text)
-
-    try:
-        return json.loads(text)
-    except:
-        return {"error": text}
-
-
 def judge_single(llm, prompt, question, reference, answer):
 
     chain = prompt | llm
