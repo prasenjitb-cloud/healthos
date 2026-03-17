@@ -41,6 +41,7 @@ HEALTHOS/
 │
 ├── main.py
 ├── prompts.py
+├── config.json
 ├── requirements.txt
 └── README.md
 
