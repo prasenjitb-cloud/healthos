@@ -1,9 +1,10 @@
+import argparse
+import json
 import models
 import judge
-import json
+
 
 def compute_score(scores):
-
     return (
         scores["accuracy"]
         + scores["reasoning"]
@@ -12,12 +13,11 @@ def compute_score(scores):
     ) / 4
 
 
-def run_evaluation():
+def run_evaluation(configfile, config_name, testdata_path):
 
-    biomed_scores = []
-    tiny_scores = []
+    scores_list = []
 
-    with open("testdata.json", "r") as f:
+    with open(testdata_path, "r") as f:
         questions_data = json.load(f)
 
     for q in questions_data:
@@ -27,36 +27,67 @@ def run_evaluation():
 
         print("\nQUESTION:", question)
 
-        biomed, tiny = models.run_models(question)
+        response = models.run_model(
+            question,
+            configfile=configfile,
+            config_name=config_name
+        )
 
-        print("BioMedLM:", biomed)
-        print("TinyLlama:", tiny)
+        print(f"{config_name}:", response)
 
-        result = judge.judge(question, reference, biomed, tiny)
+        result = judge.judge_single(
+            question,
+            reference,
+            response
+        )
 
-        a_score = compute_score(result["model_a"])
-        b_score = compute_score(result["model_b"])
+        score = compute_score(result)
 
-        biomed_scores.append(a_score)
-        tiny_scores.append(b_score)
+        scores_list.append(score)
 
-    return biomed_scores, tiny_scores
+    return scores_list
+
+
+def parse_args():
+
+    parser = argparse.ArgumentParser(description="Single Model Evaluation")
+
+    parser.add_argument(
+        "-configfile",
+        required=True,
+        help="Path to config JSON"
+    )
+
+    parser.add_argument(
+        "-config",
+        required=True,
+        help="Model config name"
+    )
+
+    parser.add_argument(
+        "-testdata",
+        default="testdata.json",
+        help="Path to test dataset"
+    )
+
+    return parser.parse_args()
+
 
 def main():
-    biomed_scores, tiny_scores = run_evaluation()
-    
-    biomed_avg = sum(biomed_scores) / len(biomed_scores)
-    tiny_avg = sum(tiny_scores) / len(tiny_scores)
-    
+
+    args = parse_args()
+
+    scores = run_evaluation(
+        args.configfile,
+        args.config,
+        args.testdata
+    )
+
+    avg_score = sum(scores) / len(scores)
+
     print("\nFINAL RESULTS")
-    
-    print("BioMedLM Average:", biomed_avg)
-    print("TinyLlama Average:", tiny_avg)
-    
-    if biomed_avg > tiny_avg:
-        print("BioMedLM performs better in medical context")
-    else:
-        print("TinyLlama performs better")
+    print(f"{args.config} Average Score:", avg_score)
+
 
 if __name__ == "__main__":
     main()
