@@ -1,27 +1,32 @@
+import json
 import llama_cpp
 
-print("Loading models...")
 
-biomed_model = llama_cpp.Llama(
-        model_path="../models/BioMedLM-7B.Q4_K_M.gguf",
-        n_ctx=2048,
-        temperature=0.2,
-        top_p=0.9,
-        n_threads=8,
-        verbose=False
+def load_config(configfile):
+    with open(configfile, "r") as f:
+        return json.load(f)
+
+
+def load_model(configfile, config_name):
+
+    config = load_config(configfile)
+
+    if config_name not in config:
+        raise ValueError(f"Config '{config_name}' not found")
+
+    model_config = config[config_name]
+
+    model = llama_cpp.Llama(
+        model_path=model_config["model_path"],
+        n_ctx=model_config["n_ctx"],
+        n_threads=model_config["n_threads"],
+        verbose=model_config["verbose"]
     )
 
-tiny_model = llama_cpp.Llama(
-        model_path="../models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
-        n_ctx=2048,
-        temperature=0.2,
-        top_p=0.9,
-        n_threads=8,
-        verbose=False
-    )
+    return model, model_config
 
 
-def generate_answer(model, question):
+def generate_answer(model, model_config, question):
 
     prompt = f"""
 ### System
@@ -30,7 +35,7 @@ You are a biomedical expert assistant.
 Your task:
 - Answer medical questions accurately.
 - Use biomedical knowledge.
-- Respond in 1 sentences.
+- Respond in 1 sentence.
 - Do NOT repeat the question.
 
 ### Question
@@ -41,10 +46,10 @@ Your task:
 
     result = model(
         prompt,
-        max_tokens=120,
-        temperature=0.2,
-        top_p=0.9,
-        stop=["###"]
+        max_tokens=model_config["max_tokens"],
+        temperature=model_config["temperature"],
+        top_p=model_config["top_p"],
+        stop=model_config.get("stop", ["###"])
     )
 
     text = result["choices"][0]["text"].strip()
@@ -54,9 +59,11 @@ Your task:
 
     return text
 
-def run_models(question):
 
-    biomed = generate_answer(biomed_model, question)
-    tiny = generate_answer(tiny_model, question)
+def run_model(question, configfile, config_name):
 
-    return biomed, tiny
+    model, model_config = load_model(configfile, config_name)
+
+    response = generate_answer(model, model_config, question)
+
+    return response
