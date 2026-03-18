@@ -24,11 +24,9 @@
     "threshold": 0.6
   },
 
-  {
   "judge_model": {
     "model": "llama-3.1-8b-instant",
     "temperature": 0,
     "api_key_env": "GROQ_API_KEY"
-  }
 }
 }
