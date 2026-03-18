@@ -60,9 +60,7 @@ Your task:
     return text
 
 
-def run_model(question, configfile, config_name):
-
-    model, model_config = load_model(configfile, config_name)
+def run_model(question, configfile, config_name,model,model_config):
 
     response = generate_answer(model, model_config, question)
 
