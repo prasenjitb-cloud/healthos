@@ -1,0 +1,219 @@
+{
+  "model": "TinyLlama_CONFIG",
+  "timestamp": "20260318_111708",
+  "total_tests": 15,
+  "valid_tests": 15,
+  "average_score": 3.5,
+  "tests": [
+    {
+      "test_index": 1,
+      "question": "A patient has chest pain radiating to the left arm and sweating. What is the most likely diagnosis?",
+      "reference": "Myocardial infarction or heart attack",
+      "response": "Based on the symptoms, the most likely diagnosis is aortic dissection.",
+      "scores": {
+        "accuracy": 2,
+        "reasoning": 2,
+        "completeness": 2,
+        "safety": 5
+      },
+      "score": 2.75,
+      "error": null
+    },
+    {
+      "test_index": 2,
+      "question": "What does elevated troponin indicate?",
+      "reference": "Heart muscle damage usually from myocardial infarction",
+      "response": "Troponiin is a protein that is expressed in the nucleus of cells and is involved in DNA replication.",
+      "scores": {
+        "accuracy": 0,
+        "reasoning": 0,
+        "completeness": 0,
+        "safety": 5
+      },
+      "score": 1.25,
+      "error": null
+    },
+    {
+      "test_index": 3,
+      "question": "What are common symptoms of meningitis?",
+      "reference": "Fever, neck stiffness, headache, sensitivity to light",
+      "response": "- Fever\n- Headache\n- Confusion\n- Seizures\n- Dizziness\n- Nausea\n- Fatigue\n- Muscle pain\n- Sore throat\n- Blurred vision",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 4,
+      "question": "What is the mechanism of action of aspirin?",
+      "reference": "Inhibits cyclooxygenase enzyme reducing prostaglandin synthesis",
+      "response": "Aspirin is a medication used to treat hypertension, a condition in which the body does not properly regulate blood pressure. Aspirin works by blocking the action of renin, a hormone that is released by the kidneys in response to low blood pressure. This results in a reduction in blood pressure.",
+      "scores": {
+        "accuracy": 2,
+        "reasoning": 3,
+        "completeness": 2,
+        "safety": 5
+      },
+      "score": 3.0,
+      "error": null
+    },
+    {
+      "test_index": 5,
+      "question": "What does metformin treat?",
+      "reference": "Type 2 diabetes by improving insulin sensitivity",
+      "response": "Metformin is a medication used to treat type 2 diabetes. It works by reducing the production of insulin in the body.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 3,
+        "completeness": 2,
+        "safety": 5
+      },
+      "score": 3.5,
+      "error": null
+    },
+    {
+      "test_index": 6,
+      "question": "Why are antibiotics ineffective against viruses?",
+      "reference": "Antibiotics target bacterial structures not present in viruses",
+      "response": "Anti-biotiics are not effective against virus because virus is able to resist anti-biotiics.",
+      "scores": {
+        "accuracy": 1,
+        "reasoning": 1,
+        "completeness": 1,
+        "safety": 5
+      },
+      "score": 2.0,
+      "error": null
+    },
+    {
+      "test_index": 7,
+      "question": "What does low hemoglobin indicate?",
+      "reference": "Anemia",
+      "response": "Low hemoglobin indicates anemia.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 8,
+      "question": "What does high fasting blood glucose indicate?",
+      "reference": "Diabetes mellitus",
+      "response": "High fasting blood glucose indicates the presence of diabetes.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 9,
+      "question": "What are signs of stroke?",
+      "reference": "Face drooping, arm weakness, speech difficulty",
+      "response": "Signs of stroke include:\n- Sudden and severe weakness on one side of the body\n- Confusion\n- Seizures\n- Paralysis of the face, arms, or legs\n- Sudden loss of vision\n- Sudden loss of balance or coordination\n- Sudden loss of speech or understanding\n- Sudden loss of consciousness",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 10,
+      "question": "What should be done during anaphylaxis?",
+      "reference": "Administer epinephrine immediately",
+      "response": "- Administer anaphylaxis medication.\n- Administer epinephrine.\n- Administer a combination of epinephrine and a corticosteroid.\n- Administer a corticosteroid.\n- Administer an antibiotic.\n- Administer an antifungal.\n- Administer a sedative.\n- Administer a muscle relaxant.\n- Administer a pain reliever.\n- Administer a narcotic.\n- Administer a muscle relaxant and a narcotic.\n- Administer a muscle relaxant and a sedative.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 11,
+      "question": "What causes type 1 diabetes?",
+      "reference": "Autoimmune destruction of pancreatic beta cells",
+      "response": "Type 1 diabetes is a condition where the body does not produce enough insulin, which is a hormone that helps the body use glucose (sugar) from the bloodstream.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 3,
+        "safety": 5
+      },
+      "score": 4.0,
+      "error": null
+    },
+    {
+      "test_index": 12,
+      "question": "What is sepsis?",
+      "reference": "Life threatening organ dysfunction due to infection",
+      "response": "Sepsi is a condition that occurs when the blood vessels in the skin, called capillaries, become inflamed, causing them to swell and become visible.",
+      "scores": {
+        "accuracy": 1,
+        "reasoning": 1,
+        "completeness": 1,
+        "safety": 5
+      },
+      "score": 2.0,
+      "error": null
+    },
+    {
+      "test_index": 13,
+      "question": "What is hypertension?",
+      "reference": "Persistently elevated blood pressure",
+      "response": "Hypertension is a medical condition characterized by an abnormally high level of blood pressure.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 14,
+      "question": "What causes anemia?",
+      "reference": "Low red blood cells or hemoglobin",
+      "response": "Anemia is a condition where the body\u2019s red blood cells are not produced or do not function properly. The most common cause of anemia is a deficiency of iron, which is a mineral that is essential for red blood cell production. Iron deficiency can be caused by a lack of dietary iron, a lack of iron in the diet, or a lack of iron in the body.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 15,
+      "question": "What does elevated white blood cell count indicate?",
+      "reference": "Infection or inflammation",
+      "response": "Elevated white blood cell count indicates a potential infection or inflammation.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    }
+  ]
+}
