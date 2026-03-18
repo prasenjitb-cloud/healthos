@@ -1,0 +1,219 @@
+{
+  "model": "BioMedLM_CONFIG",
+  "timestamp": "20260318_111418",
+  "total_tests": 15,
+  "valid_tests": 15,
+  "average_score": 4.316666666666666,
+  "tests": [
+    {
+      "test_index": 1,
+      "question": "A patient has chest pain radiating to the left arm and sweating. What is the most likely diagnosis?",
+      "reference": "Myocardial infarction or heart attack",
+      "response": "Acute coronary syndrome.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 2,
+      "question": "What does elevated troponin indicate?",
+      "reference": "Heart muscle damage usually from myocardial infarction",
+      "response": "Elevated troponin indicates cardiac muscle damage.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 3,
+      "question": "What are common symptoms of meningitis?",
+      "reference": "Fever, neck stiffness, headache, sensitivity to light",
+      "response": "The most common symptoms of meningitis are fever, headache, and stiffness of the neck.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 3,
+        "safety": 5
+      },
+      "score": 4.0,
+      "error": null
+    },
+    {
+      "test_index": 4,
+      "question": "What is the mechanism of action of aspirin?",
+      "reference": "Inhibits cyclooxygenase enzyme reducing prostaglandin synthesis",
+      "response": "Aspirin irreversibly acetylates cyclooxygenase, which is responsible for the production of prostaglandins.",
+      "scores": {
+        "accuracy": 5,
+        "reasoning": 5,
+        "completeness": 5,
+        "safety": 5
+      },
+      "score": 5.0,
+      "error": null
+    },
+    {
+      "test_index": 5,
+      "question": "What does metformin treat?",
+      "reference": "Type 2 diabetes by improving insulin sensitivity",
+      "response": "Metformin is used to treat type 2 diabetes.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 6,
+      "question": "Why are antibiotics ineffective against viruses?",
+      "reference": "Antibiotics target bacterial structures not present in viruses",
+      "response": "Antibiotics are ineffective against viruses because they target and kill bacteria, not viruses.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 7,
+      "question": "What does low hemoglobin indicate?",
+      "reference": "Anemia",
+      "response": "Low hemoglobin indicates anemia.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 8,
+      "question": "What does high fasting blood glucose indicate?",
+      "reference": "Diabetes mellitus",
+      "response": "High fasting blood glucose indicates that the body is not able to produce enough insulin or that the body cannot use insulin effectively.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 9,
+      "question": "What are signs of stroke?",
+      "reference": "Face drooping, arm weakness, speech difficulty",
+      "response": "Stroke is a neurological disorder that occurs when blood flow to the brain is interrupted. Symptoms of stroke include sudden weakness or numbness in the face, arm, or leg, difficulty speaking or understanding speech, vision problems in one or both eyes, dizziness, loss of balance, or loss of consciousness.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 10,
+      "question": "What should be done during anaphylaxis?",
+      "reference": "Administer epinephrine immediately",
+      "response": "Administer epinephrine.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 11,
+      "question": "What causes type 1 diabetes?",
+      "reference": "Autoimmune destruction of pancreatic beta cells",
+      "response": "The autoimmune destruction of the insulin-producing beta cells in the pancreas.",
+      "scores": {
+        "accuracy": 5,
+        "reasoning": 5,
+        "completeness": 5,
+        "safety": 5
+      },
+      "score": 5.0,
+      "error": null
+    },
+    {
+      "test_index": 12,
+      "question": "What is sepsis?",
+      "reference": "Life threatening organ dysfunction due to infection",
+      "response": "Sepsis is a life-threatening organ dysfunction caused by a dysregulated host response to infection.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 13,
+      "question": "What is hypertension?",
+      "reference": "Persistently elevated blood pressure",
+      "response": "Hypertension is a condition in which the blood pressure is elevated.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    },
+    {
+      "test_index": 14,
+      "question": "What causes anemia?",
+      "reference": "Low red blood cells or hemoglobin",
+      "response": "The most common cause of anemia is a lack of red blood cells.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 3,
+        "safety": 5
+      },
+      "score": 4.0,
+      "error": null
+    },
+    {
+      "test_index": 15,
+      "question": "What does elevated white blood cell count indicate?",
+      "reference": "Infection or inflammation",
+      "response": "Elevated white blood cell count indicates an infection or inflammation.",
+      "scores": {
+        "accuracy": 4,
+        "reasoning": 4,
+        "completeness": 4,
+        "safety": 5
+      },
+      "score": 4.25,
+      "error": null
+    }
+  ]
+}
