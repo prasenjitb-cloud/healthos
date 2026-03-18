@@ -9,7 +9,10 @@ Model_Evaluation/
 ├── judge.py
 ├── models.py
 ├── testdata.json
-└── README.md
+├── README.md
+└── results #Results of the test will be stored here
+      ├── TinyLlama_CONFIG_20260318_111708.json
+      └── BioMedLM_CONFIG_20260318_111418.json
 ```
 
 ---
