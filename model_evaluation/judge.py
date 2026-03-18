@@ -55,21 +55,21 @@ Score both answers from 1 to 5 on:
 
 Return ONLY valid JSON.
 
-{
-"model_a": {
+{{
+"model_a": {{
 "accuracy": 4,
 "reasoning": 4,
 "completeness": 4,
 "safety": 5
-},
-"model_b": {
+}},
+"model_b": {{
 "accuracy": 2,
 "reasoning": 2,
 "completeness": 2,
 "safety": 3
-},
+}},
 "winner": "A"
-}
+}}
 """)
     else:
         return langchain_core.prompts.ChatPromptTemplate.from_template("""
@@ -95,12 +95,12 @@ Score from 1 to 5 on:
 
 Return ONLY valid JSON.
 
-{
+{{
 "accuracy": 4,
 "reasoning": 4,
 "completeness": 4,
 "safety": 5
-}
+}}
 """)
 
 def judge_single(llm, prompt, question, reference, answer):
