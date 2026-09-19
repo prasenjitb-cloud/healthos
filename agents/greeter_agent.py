@@ -3,6 +3,7 @@ import json
 import argparse
 import llama_cpp
 import langgraph.graph
+from state_schema import DynamicStateSchema
 
 
 def load_config(config_file):
@@ -21,6 +22,7 @@ def load_slm(config_data, model_name):
         model_path=model_config["model_path"],
         n_ctx=model_config["n_ctx"],
         n_threads=model_config["n_threads"],
+        n_gpu_layers=model_config["n_gpu_layers"],
         verbose=model_config["verbose"]
     ), model_config
 
@@ -42,7 +44,7 @@ def run_llm(slm, model_config, prompt: str) -> str:
 def load_doctors():
 
     with open(
-        "slotbooking/ThirdPartyAPIs/synthetic_data/doctors.json",
+        "../slotbooking/ThirdPartyAPIs/synthetic_data/doctors.json",
         "r",
         encoding="utf-8"
     ) as f:
@@ -59,6 +61,7 @@ def create_healthos_app(slm, model_config, doctors, specializations):
         messages: typing.Annotated[typing.List[str], "Chat history"]
         user_input: str
         intent: str
+        triage_data: typing.Optional[dict]
 
 
     def greeter_agent(state: AgentState):
@@ -89,14 +92,7 @@ def create_healthos_app(slm, model_config, doctors, specializations):
             if word in user_msg:
                 return {"intent": "booking", "messages": state["messages"]}
 
-        prompt = f"""
-Classify this medical message into one word:
-emergency, triage, booking
-
-Message: {user_msg}
-
-Answer with one word only.
-"""
+        prompt = f""" You are the Greeter Agent of a medical application called HealthOS. Your task is to classify the user's message into EXACTLY ONE of these three classes: 1. Triage - The user is describing symptoms, pain, illness, discomfort, or a health concern. - The user wants to understand their condition or find the appropriate medical department/specialist. - The user is NOT explicitly requesting an appointment or booking. - Example: "I have severe joint pain and swelling in my knees." 2. Booking - The user explicitly wants to book, schedule, reserve, or check availability for a doctor/medical appointment. - Example: "I want to book an appointment with a cardiologist." 3. Emergency - The user describes a potentially life-threatening or urgent medical situation that requires immediate emergency attention. - Examples include severe chest pain, difficulty breathing, unconsciousness, severe bleeding, or symptoms suggesting a medical emergency. - Example: "I am having severe chest pain and I cannot breathe properly." IMPORTANT RULES: - Return ONLY one class name: Triage, Booking, or Emergency. - Do NOT provide explanations. - Do NOT provide medical advice. - Do NOT ask follow-up questions. - If the user describes symptoms without explicitly asking to book an appointment, classify as Triage. - If the user explicitly asks to book/schedule/reserve an appointment, classify as Booking, unless the message clearly describes an immediate emergency. - If the message indicates a possible life-threatening emergency, classify as Emergency. ### Examples Example 1: User: "I have been having severe pain in my knees for the past two weeks and they are swollen." Reasoning: The user is describing symptoms and has not requested an appointment. This should be handled through medical triage. Classification: Triage Example 2: User: "I want to schedule an appointment with a doctor for my back pain tomorrow." Reasoning: The user explicitly wants to schedule an appointment. Therefore, this is a booking request. Classification: Booking Example 3: User: "I suddenly have severe chest pain and I am having difficulty breathing." Reasoning: The symptoms indicate a potentially life-threatening emergency requiring immediate attention. Classification: Emergency Now classify the following user message: User: {user_msg} Classification: """
 
         intent = run_llm(slm, model_config, prompt).strip().lower()
 
@@ -110,23 +106,29 @@ Answer with one word only.
 
         user_msg = state["user_input"]
 
-        prompt = f"""
-You are a medical triage assistant.
+        prompt = f""" You are the Triage Agent of a medical application called HealthOS. Your task is to identify the most appropriate medical specialization based on the user's symptoms. Choose EXACTLY ONE specialization from the following list: {', '.join(specializations)} IMPORTANT RULES: - Choose ONLY a specialization from the provided list. - Do NOT invent a new specialization. - Do NOT provide medical advice or diagnosis. - Do NOT explain your answer. - Return ONLY the specialization name. - Consider the symptoms described by the user and select the specialization that would normally handle those symptoms. - If the symptoms are unclear or do not strongly match any specialization, choose "General Medicine" if it is available in the list. ### Examples Example 1: Symptoms: "I have severe pain in my knees and I am having difficulty walking." Reasoning: The symptoms primarily involve the joints and musculoskeletal system. An orthopedic specialist would normally handle these symptoms. Classification: Orthopedics Example 2: Symptoms: "I have been experiencing chest discomfort and my heart feels like it is beating irregularly." Reasoning: The symptoms involve the heart and cardiovascular system. A cardiologist would normally handle these symptoms. Classification: Cardiology Example 3: Symptoms: "I have a persistent cough, fever, and difficulty breathing for the past few days." Reasoning: The symptoms primarily involve the respiratory system. A pulmonologist would normally handle these symptoms. Classification: Pulmonology ### Now classify the following symptoms: Symptoms: {user_msg} Specialization: """
 
-Choose ONLY ONE specialization from:
-{', '.join(specializations)}
+        predicted = run_llm(
+            slm,
+            model_config,
+            prompt
+        ).strip()
 
-Symptoms: {user_msg}
+        predicted = (
+            predicted
+            .replace(".", "")
+            .replace("specialist", "")
+            .strip()
+        )
 
-Answer with only the specialization name.
-"""
-
-        predicted = run_llm(slm, model_config, prompt).strip()
-        predicted = predicted.replace(".", "").replace("specialist", "").strip()
+        # ------------------------------------------
+        # Match LLM output with specialization
+        # ------------------------------------------
 
         matched_specialization = None
 
         for spec in specializations:
+
             if spec.lower() in predicted.lower():
                 matched_specialization = spec
                 break
@@ -134,12 +136,24 @@ Answer with only the specialization name.
         if not matched_specialization:
             matched_specialization = "General Medicine"
 
+        # ------------------------------------------
+        # Find doctor
+        # ------------------------------------------
+
         doctor = next(
-            (doc for doc in doctors if doc["specialization"] == matched_specialization),
+            (
+                doc for doc in doctors
+                if doc["specialization"] == matched_specialization
+            ),
             None
         )
 
+        # ------------------------------------------
+        # Create response
+        # ------------------------------------------
+
         if doctor:
+
             message = (
                 f"Triage Result:\n"
                 f"Specialist: {matched_specialization}\n"
@@ -147,11 +161,31 @@ Answer with only the specialization name.
                 f"Hospital: {doctor['hospital']}\n"
                 f"Location: {doctor['location']}"
             )
+
+            triage_data = {
+                "symptoms": user_msg,
+                "department": matched_specialization,
+                "doctor_name": doctor["name"],
+                "hospital": doctor["hospital"],
+                "location": doctor["location"]
+            }
+
         else:
+
             message = "No matching specialist found."
 
-        return {"messages": state["messages"] + [message]}
+            triage_data = {
+                "symptoms": user_msg,
+                "department": matched_specialization,
+                "doctor_name": None,
+                "hospital": None,
+                "location": None
+            }
 
+        return {
+            "messages": state["messages"] + [message],
+            "triage_data": triage_data
+        }
 
     def booking_agent(state: AgentState):
 
@@ -231,7 +265,14 @@ def main():
 
     doctors, specializations = load_doctors()
 
-    app = create_healthos_app(slm, model_config, doctors, specializations)
+    app = create_healthos_app(
+        slm,
+        model_config,
+        doctors,
+        specializations
+    )
+
+    state_schema = DynamicStateSchema()
 
     print("\n🩺 HealthOS Agentic Medical System")
     print("Type your symptoms or booking request.")
@@ -251,8 +292,42 @@ def main():
             "intent": ""
         })
 
+
+        intent = result["intent"]
+
+        if intent == "triage":
+
+            triage_data = result.get("triage_data")
+
+            if triage_data:
+
+                state_schema.add_symptom_data(
+                    symptoms=triage_data["symptoms"],
+                    department=triage_data["department"],
+                    doctor_name=triage_data["doctor_name"],
+                    hospital=triage_data["hospital"],
+                    location=triage_data["location"]
+                )
+
+        elif intent == "booking":
+
+            state_schema.activate_sections(
+                booking=True
+            )
+
+        elif intent == "emergency":
+
+            state_schema.add_emergency_data(
+                emergency_type=user_input,
+                emergency_status=True
+            )
+
+
         for msg in result["messages"]:
             print("\nHealthOS:", msg)
+
+
+        state_schema.print_schema()
 
 
 if __name__ == "__main__":
