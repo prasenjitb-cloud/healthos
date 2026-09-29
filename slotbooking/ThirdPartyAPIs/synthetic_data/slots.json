@@ -53,7 +53,8 @@
     "doctor_id": 3,
     "date": "2026-02-12",
     "time": "11:00",
-    "available": true
+    "available": false,
+    "booked_by": "Patient"
   },
   {
     "slot_id": 303,
