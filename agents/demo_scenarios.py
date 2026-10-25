@@ -19,6 +19,8 @@ from state_schema import (
 )
 from task_resolver import TaskResolver
 from dependency_engine import DependencyEngine
+from response_generator_agent import ResponseGeneratorAgent
+from booking_connector import BookingConnector
 
 
 def simulate_scenario(title: str, steps: list):
@@ -28,6 +30,8 @@ def simulate_scenario(title: str, steps: list):
 
     resolver = TaskResolver()
     engine = DependencyEngine()
+    booking_connector = BookingConnector()
+    response_agent = ResponseGeneratorAgent(booking_connector)
     schema = create_empty_schema()
 
     for idx, user_input_update in enumerate(steps, 1):
@@ -49,6 +53,19 @@ def simulate_scenario(title: str, steps: list):
         if not is_schema_complete(schema):
             print(f"  • Missing Fields  : {get_missing_fields(schema)}")
 
+        # ----------------------------------------------------------
+        # RESPONSE GENERATOR AGENT  (new section)
+        # ----------------------------------------------------------
+        print("\n" + "-" * 60)
+        print("  RESPONSE GENERATOR AGENT")
+        print("-" * 60)
+        agent_response = response_agent.generate(schema, action_plan)
+        if agent_response:
+            print(f"  HealthOS:\n{agent_response}")
+        else:
+            print("  HealthOS: (No further input required)")
+        print("-" * 60)
+
     print("\nFinal State:")
     print_schema(schema)
 
@@ -62,10 +79,10 @@ def run_all_scenarios():
         "Scenario 1: Direct Doctor Booking (User knows doctor)",
         [
             {
-                "_user_utterance": "I want an appointment with Dr. Sharma in Cardiology",
+                "_user_utterance": "I want an appointment with Dr. Kiran Mehta in Cardiology",
                 "greeter_intent": "booking",
                 "department_section": {"department": "Cardiology"},
-                "booking_section": {"doctor_name": "Dr. Sharma"},
+                "booking_section": {"doctor_name": "Dr. Kiran Mehta"},
             },
             {
                 "_user_utterance": "Tomorrow please",
@@ -87,8 +104,8 @@ def run_all_scenarios():
                 "department_section": {"department": "Dermatology"},
             },
             {
-                "_user_utterance": "Let's book Dr. Smith",
-                "booking_section": {"doctor_name": "Dr. Smith"},
+                "_user_utterance": "Let's book Dr. Pooja Sharma",
+                "booking_section": {"doctor_name": "Dr. Pooja Sharma"},
             },
             {
                 "_user_utterance": "Next Monday",
@@ -121,12 +138,54 @@ def run_all_scenarios():
                 },
             },
             {
-                "_user_utterance": "I want to consult Dr. Mehta",
-                "booking_section": {"doctor_name": "Dr. Mehta"},
+                "_user_utterance": "I want to consult Dr. Kiran Mehta",
+                "booking_section": {"doctor_name": "Dr. Kiran Mehta"},
             },
             {
                 "_user_utterance": "Friday at 4 PM",
                 "booking_section": {"date": "Friday", "time_slot": "4:00 PM"},
+            },
+        ],
+    )
+
+    simulate_scenario(
+        "Scenario 4: End-to-End Real Booking Flow (Department -> Doctor Candidates -> Slot Selection -> Execution)",
+        [
+            {
+                "_user_utterance": "I want to consult a cardiologist",
+                "greeter_intent": "booking",
+                "department_section": {"department": "Cardiology"},
+            },
+            {
+                "_user_utterance": "1 (Dr. Kiran Mehta)",
+                "booking_section": {
+                    "doctor_name": "Dr. Kiran Mehta",
+                    "doctor_valid": True,
+                    "selected_doctor": {
+                        "doctor_id": 2,
+                        "name": "Dr. Kiran Mehta",
+                        "specialization": "Cardiology",
+                        "hospital": "Apollo Clinic",
+                        "location": "Hyderabad",
+                    },
+                },
+            },
+            {
+                "_user_utterance": "1 (Slot 201: 2026-02-11 at 09:30)",
+                "booking_section": {
+                    "date": "2026-02-11",
+                    "time_slot": "09:30",
+                    "selected_slot": {
+                        "slot_id": 201,
+                        "doctor_id": 2,
+                        "date": "2026-02-11",
+                        "time": "09:30",
+                        "available": False,
+                    },
+                    "booking_slot_id": 201,
+                    "patient_name": "Patient",
+                    "booking_confirmed": True,
+                },
             },
         ],
     )
@@ -140,6 +199,8 @@ def interactive_demo():
 
     resolver = TaskResolver()
     engine = DependencyEngine()
+    booking_connector = BookingConnector()
+    response_agent = ResponseGeneratorAgent(booking_connector)
     schema = create_empty_schema()
 
     print("\nInitial schema loaded. Try entering doctor name, department, or symptoms.")
@@ -166,26 +227,39 @@ def interactive_demo():
             continue
 
         update = {}
-        if curr_dep == "doctor_name":
-            update["booking_section"] = {"doctor_name": user_input}
-        elif curr_dep == "date":
-            update["booking_section"] = {"date": user_input}
-        elif curr_dep == "time_slot":
-            update["booking_section"] = {"time_slot": user_input}
+        if curr_dep in ("doctor_name", "date", "time_slot", "department"):
+            is_valid, clarification, patch = response_agent.handle_user_input(schema, user_input, curr_dep)
+            if not is_valid and clarification:
+                print(f"\n  HealthOS:\n{clarification}")
+                continue
+            if patch:
+                update = patch
+            else:
+                if curr_dep == "doctor_name":
+                    update["booking_section"] = {"doctor_name": user_input}
+                elif curr_dep == "date":
+                    update["booking_section"] = {"date": user_input}
+                elif curr_dep == "time_slot":
+                    update["booking_section"] = {"time_slot": user_input}
+                elif curr_dep == "department":
+                    update["department_section"] = {"department": user_input}
         elif curr_dep == "symptoms":
             update["symptom_section"] = {"symptoms": [user_input]}
-        elif curr_dep == "department":
-            update["department_section"] = {"department": user_input}
         else:
             low = user_input.lower()
             if "emergency" in low or "chest pain" in low:
                 update["greeter_intent"] = "emergency"
             elif "dr." in low or "doctor" in low:
                 update["greeter_intent"] = "booking"
-                update["booking_section"] = {"doctor_name": user_input}
-            elif any(d in low for d in ["cardiology", "dermatology", "neurology", "orthopedics"]):
+                is_valid, clarif, patch = response_agent.handle_user_input(schema, user_input, "doctor_name")
+                if patch:
+                    update = patch
+                else:
+                    update["booking_section"] = {"doctor_name": user_input}
+            elif booking_connector.match_department(user_input):
+                matched_dept = booking_connector.match_department(user_input)
                 update["greeter_intent"] = "booking"
-                update["department_section"] = {"department": user_input}
+                update["department_section"] = {"department": matched_dept}
             else:
                 update["greeter_intent"] = "triage"
                 update["symptom_section"] = {"symptoms": [user_input]}
@@ -207,8 +281,25 @@ def interactive_demo():
             action_plan = engine.get_next_action(schema)
             engine.update_schema_state(schema)
 
+        if action_plan.get("action") == "COMPLETE":
+            selected_slot = schema.get("booking_section", {}).get("selected_slot")
+            if selected_slot and not schema.get("booking_section", {}).get("booking_confirmed"):
+                slot_id = selected_slot.get("slot_id")
+                patient = schema.get("booking_section", {}).get("patient_name") or "Patient"
+                success = booking_connector.execute_booking(slot_id, patient)
+                schema["booking_section"]["booking_confirmed"] = success
+                schema["booking_section"]["booking_slot_id"] = slot_id
+
         print_schema(schema)
         print(f"\nNext Action: {action_plan.get('action')} | Dependency: {action_plan.get('dependency')}")
+
+        print("\n" + "-" * 60)
+        print("  RESPONSE GENERATOR AGENT")
+        print("-" * 60)
+        agent_response = response_agent.generate(schema, action_plan)
+        if agent_response:
+            print(f"  HealthOS:\n{agent_response}")
+        print("-" * 60)
 
 
 if __name__ == "__main__":
