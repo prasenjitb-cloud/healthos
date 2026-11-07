@@ -25,7 +25,12 @@
     "doctor_id": 2,
     "date": "2026-02-11",
     "time": "09:30",
+<<<<<<< HEAD
     "available": true
+=======
+    "available": false,
+    "booked_by": "Patient"
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
   },
   {
     "slot_id": 202,
@@ -53,7 +58,12 @@
     "doctor_id": 3,
     "date": "2026-02-12",
     "time": "11:00",
+<<<<<<< HEAD
     "available": true
+=======
+    "available": false,
+    "booked_by": "Patient"
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
   },
   {
     "slot_id": 303,
@@ -144,7 +154,12 @@
     "doctor_id": 7,
     "date": "2026-02-16",
     "time": "11:30",
+<<<<<<< HEAD
     "available": true
+=======
+    "available": false,
+    "booked_by": "Patient"
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
   },
   {
     "slot_id": 801,
@@ -314,4 +329,8 @@
     "time": "12:00",
     "available": true
   }
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)

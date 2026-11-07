@@ -10,5 +10,11 @@ sentence-transformers==5.2.0
 # Numerical operations for embeddings and similarity computation
 numpy==2.4.1
 
+<<<<<<< HEAD
 # Helps to interact with JSON files
 json
+=======
+# Transformers and PyTorch for ToxicBERT guardrail pipeline
+torch>=2.0.0
+transformers>=4.40.0
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)

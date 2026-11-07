@@ -43,6 +43,13 @@ class DepartmentSection(typing.TypedDict, total=False):
 
     confidence: typing.Optional[float]
 
+<<<<<<< HEAD
+=======
+    is_ambiguous: typing.Optional[bool]
+
+    routed_due_to_indecision: typing.Optional[bool]
+
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 class BookingSection(typing.TypedDict, total=False):
 
@@ -58,6 +65,21 @@ class BookingSection(typing.TypedDict, total=False):
 
     doctor_candidates: typing.List[dict]
 
+<<<<<<< HEAD
+=======
+    selected_doctor: typing.Optional[dict]
+
+    slot_candidates: typing.List[dict]
+
+    selected_slot: typing.Optional[dict]
+
+    patient_name: typing.Optional[str]
+
+    booking_confirmed: typing.Optional[bool]
+
+    booking_slot_id: typing.Optional[int]
+
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 class DynamicSchema(typing.TypedDict, total=False):
 
@@ -121,6 +143,21 @@ def create_empty_schema() -> DynamicSchema:
 
             "doctor_candidates": [],
 
+<<<<<<< HEAD
+=======
+            "selected_doctor": None,
+
+            "slot_candidates": [],
+
+            "selected_slot": None,
+
+            "patient_name": None,
+
+            "booking_confirmed": None,
+
+            "booking_slot_id": None,
+
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
         },
 
     }
@@ -318,6 +355,15 @@ def merge_schema_update(
                 "confidence"
             ] = float(confidence)
 
+<<<<<<< HEAD
+=======
+        if "is_ambiguous" in department_update:
+            schema["department_section"]["is_ambiguous"] = bool(department_update["is_ambiguous"])
+
+        if "routed_due_to_indecision" in department_update:
+            schema["department_section"]["routed_due_to_indecision"] = bool(department_update["routed_due_to_indecision"])
+
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
     booking_update = update.get(
         "booking_section"
@@ -380,6 +426,29 @@ def merge_schema_update(
                 "doctor_candidates"
             ] = candidates
 
+<<<<<<< HEAD
+=======
+        if "selected_doctor" in booking_update:
+            schema["booking_section"]["selected_doctor"] = booking_update["selected_doctor"]
+
+        slots = booking_update.get("slot_candidates")
+        if isinstance(slots, list):
+            schema["booking_section"]["slot_candidates"] = slots
+
+        if "selected_slot" in booking_update:
+            schema["booking_section"]["selected_slot"] = booking_update["selected_slot"]
+
+        patient_name = clean_string(booking_update.get("patient_name"))
+        if patient_name is not None:
+            schema["booking_section"]["patient_name"] = patient_name
+
+        if "booking_confirmed" in booking_update:
+            schema["booking_section"]["booking_confirmed"] = booking_update["booking_confirmed"]
+
+        if "booking_slot_id" in booking_update:
+            schema["booking_section"]["booking_slot_id"] = booking_update["booking_slot_id"]
+
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     return schema
 
 
@@ -575,6 +644,20 @@ def print_schema(
     print(f"    Hospital     : {booking.get('hospital')}")
     print(f"    Doctor Valid  : {booking.get('doctor_valid')}")
     print(f"    Candidates   : {booking.get('doctor_candidates', [])}")
+<<<<<<< HEAD
+=======
+    if booking.get("selected_doctor"):
+        print(f"    Selected Doc : {booking.get('selected_doctor', {}).get('name')}")
+    if booking.get("slot_candidates"):
+        print(f"    Slot Count   : {len(booking.get('slot_candidates', []))}")
+    if booking.get("selected_slot"):
+        slot = booking.get('selected_slot', {})
+        print(f"    Selected Slot: {slot.get('date')} {slot.get('time')} (ID: {slot.get('slot_id')})")
+    if booking.get("patient_name"):
+        print(f"    Patient Name : {booking.get('patient_name')}")
+    if booking.get("booking_confirmed") is not None:
+        print(f"    Confirmed    : {booking.get('booking_confirmed')} (Slot ID: {booking.get('booking_slot_id')})")
+>>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
     task = schema.get("task")
     if task:

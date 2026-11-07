@@ -1,0 +1,64 @@
+# Python virtual environments
+myenv/
+venv/
+env/
+.venv/
+
+models/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Model weights and checkpoints
+*.gguf
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.bin
+
+# Generated vector database
+vector_db/
+chroma_db/
+faiss_index/
+
+# Temporary files
+*.tmp
+*.bak
+.cache/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build files
+build/
+dist/
+*.egg-info/
+EOFTrails/
+
+# Exclude agent test files
+agents/test_*.py
