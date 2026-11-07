@@ -1,4 +1,5 @@
-# HealthOS – Agentic Routing System
+# HealthOS — Agentic Routing & Dynamic State System
+
 ---
 
 ## Project Structure
@@ -40,6 +41,40 @@ It drives chat-based appointment bookings bottom-up across three primary user wo
    - *Workflow:* Collects symptoms $\rightarrow$ runs system `department_classifier` $\rightarrow$ suggests department & lists available doctors $\rightarrow$ collects date and time slot $\rightarrow$ completes booking.
 4. **Emergency Override**
    - Immediate safety override for critical symptoms (e.g., severe chest pain, shortness of breath), routing to emergency guidance without booking delay.
+
+---
+
+## Architecture Flow
+
+```
+User Message
+    │
+    ▼
+Guardrail Agent (Safety & Toxicity Filtering)
+    │
+    ▼
+Greeter Agent (Intent: Emergency / Booking / Triage)
+    │
+    ▼
+Task Resolver (agents/task_resolver.py)
+    │  - Evaluates extracted entities & greeter intent
+    │  - Selects Task: DIRECT_BOOKING | DEPARTMENT_BOOKING | SYMPTOM_BASED_BOOKING | EMERGENCY
+    ▼
+Dynamic State Schema (agents/state_schema.py)
+    │  - Maintains conversation state across turns
+    │  - Non-destructive updates: None never overwrites existing data
+    │  - Tracks missing fields & task completeness
+    ▼
+Dependency Engine (agents/dependency_engine.py)
+    │  - Walks TASK_DEPENDENCIES in order
+    │  - Emits next action:
+    │      • ASK_USER: User must provide next required field
+    │      • RUN_SYSTEM: System generator triggered (e.g., DepartmentClassifier)
+    │      • COMPLETE: All dependencies satisfied, ready for slot booking
+    │      • EMERGENCY: Routes immediately to emergency protocol
+    ▼
+State Update (schema["stage"] & schema["current_dependency"])
+```
 
 ---
 
@@ -89,25 +124,67 @@ Evaluates the current state against task dependencies to determine the exact nex
 ### 5. `greeter_agent.py`
 Intent detection and initial conversational routing agent powered by LangGraph and local SLM (TinyLLaMA via `llama.cpp`).
 
+---
+
 ## Verification & Testing
 
-### Running the Live Demo
-There are two ways to demonstrate the Dynamic State & Dependency Engine:
+### Running Unit Tests
+All layers are verified with 23 automated unit tests:
 
-#### 1. Automated Walkthrough (All 3 Scenarios)
-Runs a turn-by-turn simulation of all three booking scenarios and prints the dynamic schema progression:
+```bash
+# Activate virtual environment
+source myenv/bin/activate
+
+# Run all test suites
+python3 -m unittest discover -s agents -p "test_*.py" -v
+```
+
+### Running Individual Test Suites
+```bash
+python3 agents/test_state_schema.py
+python3 agents/test_dependency_engine.py
+python3 agents/test_task_resolver.py
+python3 agents/test_booking_connector.py
+python3 agents/test_response_generator.py
+
+# Or run all unit tests together:
+python3 -m unittest discover agents/
+```
+
+### Running the Live Demos & Testing Custom Inputs
+
+There are three ways to test and run the HealthOS Pipeline:
+
+#### 1. Test with Your Own Custom Inputs (CLI Arguments)
+Pass any sequence of user turns as command-line arguments to test how the pipeline handles them:
+
+```bash
+# Example 1: Direct department booking with slot selection
+python3 agents/run_custom_pipeline.py "I want to see a cardiologist" "1" "1"
+
+# Example 2: Testing error recovery with an invalid doctor name
+python3 agents/run_custom_pipeline.py "I want to see a cardiologist" "Dr. Strange" "1" "1"
+
+# Example 3: Symptom triage flow
+python3 agents/run_custom_pipeline.py "I have severe chest pain"
+```
+
+#### 2. Live Interactive Terminal Demo (Chat Mode)
+Launch an interactive terminal session where you can chat turn-by-turn with the agent, test edge cases, pick doctors, and confirm real slots:
+
+```bash
+python3 agents/demo_scenarios.py -i
+# or
+python3 agents/run_custom_pipeline.py -i
+```
+*(Special commands during chat: type `reset` to clear schema and restart, `exit` to quit)*
+
+#### 3. Automated Walkthrough (Scenarios 1–4)
+Runs a turn-by-turn simulation of all four booking scenarios (including end-to-end real booking execution):
 
 ```bash
 python3 agents/demo_scenarios.py
 ```
-
-#### 2. Live Interactive Terminal Demo
-Allows you to type directly in the terminal to test doctor booking, department choice, or symptoms live:
-
-```bash
-python3 agents/demo_scenarios.py -i
-```
-*(Commands during chat: `reset` to clear schema, `exit` to quit)*
 
 ---
 
@@ -118,6 +195,3 @@ To run the interactive LangGraph greeter agent with the local SLM:
 cd agents
 python3 greeter_agent.py -configfile ../config.json -config BioMedLM_CONFIG
 ```
-
----
-
