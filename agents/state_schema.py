@@ -43,6 +43,12 @@ class DepartmentSection(typing.TypedDict, total=False):
 
     confidence: typing.Optional[float]
 
+    is_ambiguous: typing.Optional[bool]
+
+    routed_due_to_indecision: typing.Optional[bool]
+
+    reasoning: typing.Optional[str]
+
 
 class BookingSection(typing.TypedDict, total=False):
 
@@ -57,6 +63,18 @@ class BookingSection(typing.TypedDict, total=False):
     doctor_valid: typing.Optional[bool]
 
     doctor_candidates: typing.List[dict]
+
+    selected_doctor: typing.Optional[dict]
+
+    slot_candidates: typing.List[dict]
+
+    selected_slot: typing.Optional[dict]
+
+    patient_name: typing.Optional[str]
+
+    booking_confirmed: typing.Optional[bool]
+
+    booking_slot_id: typing.Optional[int]
 
 
 class DynamicSchema(typing.TypedDict, total=False):
@@ -120,6 +138,18 @@ def create_empty_schema() -> DynamicSchema:
             "doctor_valid": None,
 
             "doctor_candidates": [],
+
+            "selected_doctor": None,
+
+            "slot_candidates": [],
+
+            "selected_slot": None,
+
+            "patient_name": None,
+
+            "booking_confirmed": None,
+
+            "booking_slot_id": None,
 
         },
 
@@ -318,6 +348,16 @@ def merge_schema_update(
                 "confidence"
             ] = float(confidence)
 
+        if "is_ambiguous" in department_update:
+            schema["department_section"]["is_ambiguous"] = bool(department_update["is_ambiguous"])
+
+        if "routed_due_to_indecision" in department_update:
+            schema["department_section"]["routed_due_to_indecision"] = bool(department_update["routed_due_to_indecision"])
+
+        reasoning = clean_string(department_update.get("reasoning"))
+        if reasoning is not None:
+            schema["department_section"]["reasoning"] = reasoning
+
 
     booking_update = update.get(
         "booking_section"
@@ -379,6 +419,26 @@ def merge_schema_update(
             schema["booking_section"][
                 "doctor_candidates"
             ] = candidates
+
+        if "selected_doctor" in booking_update:
+            schema["booking_section"]["selected_doctor"] = booking_update["selected_doctor"]
+
+        slots = booking_update.get("slot_candidates")
+        if isinstance(slots, list):
+            schema["booking_section"]["slot_candidates"] = slots
+
+        if "selected_slot" in booking_update:
+            schema["booking_section"]["selected_slot"] = booking_update["selected_slot"]
+
+        patient_name = clean_string(booking_update.get("patient_name"))
+        if patient_name is not None:
+            schema["booking_section"]["patient_name"] = patient_name
+
+        if "booking_confirmed" in booking_update:
+            schema["booking_section"]["booking_confirmed"] = booking_update["booking_confirmed"]
+
+        if "booking_slot_id" in booking_update:
+            schema["booking_section"]["booking_slot_id"] = booking_update["booking_slot_id"]
 
     return schema
 
@@ -575,6 +635,17 @@ def print_schema(
     print(f"    Hospital     : {booking.get('hospital')}")
     print(f"    Doctor Valid  : {booking.get('doctor_valid')}")
     print(f"    Candidates   : {booking.get('doctor_candidates', [])}")
+    if booking.get("selected_doctor"):
+        print(f"    Selected Doc : {booking.get('selected_doctor', {}).get('name')}")
+    if booking.get("slot_candidates"):
+        print(f"    Slot Count   : {len(booking.get('slot_candidates', []))}")
+    if booking.get("selected_slot"):
+        slot = booking.get('selected_slot', {})
+        print(f"    Selected Slot: {slot.get('date')} {slot.get('time')} (ID: {slot.get('slot_id')})")
+    if booking.get("patient_name"):
+        print(f"    Patient Name : {booking.get('patient_name')}")
+    if booking.get("booking_confirmed") is not None:
+        print(f"    Confirmed    : {booking.get('booking_confirmed')} (Slot ID: {booking.get('booking_slot_id')})")
 
     task = schema.get("task")
     if task:
@@ -643,3 +714,49 @@ class DynamicStateSchema:
 
     def print_schema(self):
         print_schema(self.data)
+
+
+def format_clinical_audit(schema: DynamicSchema) -> str:
+    """
+    Renders a structured, transparent Clinical Triage Audit Card
+    demonstrating model explainability, confidence scoring, and clinical justification.
+    """
+    dept_sec = schema.get("department_section", {})
+    sym_sec = schema.get("symptom_section", {})
+    book_sec = schema.get("booking_section", {})
+    task = schema.get("task", "unassigned")
+
+    patient = book_sec.get("patient_name") or "Patient (Guest)"
+    symptoms = sym_sec.get("symptoms", [])
+    sym_str = ", ".join(symptoms) if symptoms else "None reported"
+    dept = dept_sec.get("department") or "Unassigned"
+    source = dept_sec.get("source") or "BioMedLM-7B (Few-Shot Clinical Triage)"
+    conf = dept_sec.get("confidence")
+    conf_str = f"{conf * 100:.1f}%" if isinstance(conf, (int, float)) else "Pending / Rule Evaluation"
+    reasoning = dept_sec.get("reasoning") or "Clinical assessment based on reported patient symptoms."
+    is_ambig = dept_sec.get("is_ambiguous", False)
+
+    if task == "emergency":
+        urgency = "🚨 CRITICAL EMERGENCY (Immediate Escalation Required)"
+    elif is_ambig:
+        urgency = "⚠️ AMBIGUOUS (Multi-System Specialty Review Required)"
+    elif dept != "Unassigned":
+        urgency = "✅ ROUTINE SPECIALTY CONSULTATION (Non-Emergency)"
+    else:
+        urgency = "ℹ️ INTAKE TRIAGE IN PROGRESS"
+
+    lines = [
+        "=" * 60,
+        "              CLINICAL TRIAGE AUDIT CARD",
+        "=" * 60,
+        f"  Patient           : {patient}",
+        f"  Chief Complaints  : {sym_str}",
+        f"  Assigned Specialty: {dept}",
+        f"  Decision Engine   : {source}",
+        f"  Confidence Score  : {conf_str}",
+        f"  Clinical Rationale: {reasoning}",
+        f"  Ambiguity Flag    : {is_ambig}",
+        f"  Triage Urgency    : {urgency}",
+        "=" * 60,
+    ]
+    return "\n".join(lines)

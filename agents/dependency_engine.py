@@ -124,6 +124,16 @@ class DependencyEngine:
         dependency_config = derived_dependencies.get(dependency)
 
         if dependency_config:
+            # If department was already evaluated and flagged ambiguous,
+            # system generation cannot resolve it automatically; ask user directly.
+            if dependency == "department" and schema is not None:
+                if schema.get("department_section", {}).get("is_ambiguous"):
+                    return {
+                        "action": "ASK_USER",
+                        "dependency": dependency,
+                        "message_type": "user_dependency_due_to_ambiguity",
+                    }
+
             required_inputs = dependency_config.get(
                 "depends_on",
                 [],
