@@ -13,3 +13,6 @@ numpy==2.4.1
 # Transformers and PyTorch for ToxicBERT guardrail pipeline
 torch>=2.0.0
 transformers>=4.40.0
+
+# Interactive Web Application
+streamlit>=1.30.0
