@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import json
-
-SLOTS_FILE = "slotbooking/ThirdPartyAPIs/synthetic_data/slots.json"
-DOCTORS_FILE = "slotbooking/ThirdPartyAPIs/synthetic_data/doctors.json"
-=======
 import os
 import json
 
@@ -14,7 +8,6 @@ _RESOLVED_DOCTORS = os.path.join(_BASE_DIR, "synthetic_data", "doctors.json")
 
 SLOTS_FILE = _RESOLVED_SLOTS if os.path.exists(_RESOLVED_SLOTS) else "slotbooking/ThirdPartyAPIs/synthetic_data/slots.json"
 DOCTORS_FILE = _RESOLVED_DOCTORS if os.path.exists(_RESOLVED_DOCTORS) else "slotbooking/ThirdPartyAPIs/synthetic_data/doctors.json"
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 def get_doctors_by_specialization(specialization: str):
     with open(DOCTORS_FILE, "r", encoding="utf-8") as f:
@@ -69,8 +62,6 @@ def book_slot(slot_id: int, patient_name: str) -> bool:
             return True
 
     return False
-<<<<<<< HEAD
-=======
 
 
 def get_doctor_by_name(name: str):
@@ -103,4 +94,3 @@ def get_doctor_by_name(name: str):
                 return d
 
     return None
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)

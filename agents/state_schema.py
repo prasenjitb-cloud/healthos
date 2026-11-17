@@ -43,13 +43,12 @@ class DepartmentSection(typing.TypedDict, total=False):
 
     confidence: typing.Optional[float]
 
-<<<<<<< HEAD
-=======
     is_ambiguous: typing.Optional[bool]
 
     routed_due_to_indecision: typing.Optional[bool]
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
+    reasoning: typing.Optional[str]
+
 
 class BookingSection(typing.TypedDict, total=False):
 
@@ -65,8 +64,6 @@ class BookingSection(typing.TypedDict, total=False):
 
     doctor_candidates: typing.List[dict]
 
-<<<<<<< HEAD
-=======
     selected_doctor: typing.Optional[dict]
 
     slot_candidates: typing.List[dict]
@@ -79,7 +76,6 @@ class BookingSection(typing.TypedDict, total=False):
 
     booking_slot_id: typing.Optional[int]
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 class DynamicSchema(typing.TypedDict, total=False):
 
@@ -143,8 +139,6 @@ def create_empty_schema() -> DynamicSchema:
 
             "doctor_candidates": [],
 
-<<<<<<< HEAD
-=======
             "selected_doctor": None,
 
             "slot_candidates": [],
@@ -157,7 +151,6 @@ def create_empty_schema() -> DynamicSchema:
 
             "booking_slot_id": None,
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
         },
 
     }
@@ -355,15 +348,16 @@ def merge_schema_update(
                 "confidence"
             ] = float(confidence)
 
-<<<<<<< HEAD
-=======
         if "is_ambiguous" in department_update:
             schema["department_section"]["is_ambiguous"] = bool(department_update["is_ambiguous"])
 
         if "routed_due_to_indecision" in department_update:
             schema["department_section"]["routed_due_to_indecision"] = bool(department_update["routed_due_to_indecision"])
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
+        reasoning = clean_string(department_update.get("reasoning"))
+        if reasoning is not None:
+            schema["department_section"]["reasoning"] = reasoning
+
 
     booking_update = update.get(
         "booking_section"
@@ -426,8 +420,6 @@ def merge_schema_update(
                 "doctor_candidates"
             ] = candidates
 
-<<<<<<< HEAD
-=======
         if "selected_doctor" in booking_update:
             schema["booking_section"]["selected_doctor"] = booking_update["selected_doctor"]
 
@@ -448,7 +440,6 @@ def merge_schema_update(
         if "booking_slot_id" in booking_update:
             schema["booking_section"]["booking_slot_id"] = booking_update["booking_slot_id"]
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     return schema
 
 
@@ -644,8 +635,6 @@ def print_schema(
     print(f"    Hospital     : {booking.get('hospital')}")
     print(f"    Doctor Valid  : {booking.get('doctor_valid')}")
     print(f"    Candidates   : {booking.get('doctor_candidates', [])}")
-<<<<<<< HEAD
-=======
     if booking.get("selected_doctor"):
         print(f"    Selected Doc : {booking.get('selected_doctor', {}).get('name')}")
     if booking.get("slot_candidates"):
@@ -657,7 +646,6 @@ def print_schema(
         print(f"    Patient Name : {booking.get('patient_name')}")
     if booking.get("booking_confirmed") is not None:
         print(f"    Confirmed    : {booking.get('booking_confirmed')} (Slot ID: {booking.get('booking_slot_id')})")
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
     task = schema.get("task")
     if task:
@@ -726,3 +714,49 @@ class DynamicStateSchema:
 
     def print_schema(self):
         print_schema(self.data)
+
+
+def format_clinical_audit(schema: DynamicSchema) -> str:
+    """
+    Renders a structured, transparent Clinical Triage Audit Card
+    demonstrating model explainability, confidence scoring, and clinical justification.
+    """
+    dept_sec = schema.get("department_section", {})
+    sym_sec = schema.get("symptom_section", {})
+    book_sec = schema.get("booking_section", {})
+    task = schema.get("task", "unassigned")
+
+    patient = book_sec.get("patient_name") or "Patient (Guest)"
+    symptoms = sym_sec.get("symptoms", [])
+    sym_str = ", ".join(symptoms) if symptoms else "None reported"
+    dept = dept_sec.get("department") or "Unassigned"
+    source = dept_sec.get("source") or "BioMedLM-7B (Few-Shot Clinical Triage)"
+    conf = dept_sec.get("confidence")
+    conf_str = f"{conf * 100:.1f}%" if isinstance(conf, (int, float)) else "Pending / Rule Evaluation"
+    reasoning = dept_sec.get("reasoning") or "Clinical assessment based on reported patient symptoms."
+    is_ambig = dept_sec.get("is_ambiguous", False)
+
+    if task == "emergency":
+        urgency = "🚨 CRITICAL EMERGENCY (Immediate Escalation Required)"
+    elif is_ambig:
+        urgency = "⚠️ AMBIGUOUS (Multi-System Specialty Review Required)"
+    elif dept != "Unassigned":
+        urgency = "✅ ROUTINE SPECIALTY CONSULTATION (Non-Emergency)"
+    else:
+        urgency = "ℹ️ INTAKE TRIAGE IN PROGRESS"
+
+    lines = [
+        "=" * 60,
+        "              CLINICAL TRIAGE AUDIT CARD",
+        "=" * 60,
+        f"  Patient           : {patient}",
+        f"  Chief Complaints  : {sym_str}",
+        f"  Assigned Specialty: {dept}",
+        f"  Decision Engine   : {source}",
+        f"  Confidence Score  : {conf_str}",
+        f"  Clinical Rationale: {reasoning}",
+        f"  Ambiguity Flag    : {is_ambig}",
+        f"  Triage Urgency    : {urgency}",
+        "=" * 60,
+    ]
+    return "\n".join(lines)

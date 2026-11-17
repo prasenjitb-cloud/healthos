@@ -19,12 +19,9 @@ from state_schema import (
 )
 from task_resolver import TaskResolver
 from dependency_engine import DependencyEngine
-<<<<<<< HEAD
-=======
 from response_generator_agent import ResponseGeneratorAgent
 from booking_connector import BookingConnector
 from slm_engine import SLMEngine
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 
 def simulate_scenario(title: str, steps: list):
@@ -34,11 +31,8 @@ def simulate_scenario(title: str, steps: list):
 
     resolver = TaskResolver()
     engine = DependencyEngine()
-<<<<<<< HEAD
-=======
     booking_connector = BookingConnector()
     response_agent = ResponseGeneratorAgent(booking_connector)
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     schema = create_empty_schema()
 
     for idx, user_input_update in enumerate(steps, 1):
@@ -60,8 +54,6 @@ def simulate_scenario(title: str, steps: list):
         if not is_schema_complete(schema):
             print(f"  • Missing Fields  : {get_missing_fields(schema)}")
 
-<<<<<<< HEAD
-=======
         # ----------------------------------------------------------
         # RESPONSE GENERATOR AGENT  (new section)
         # ----------------------------------------------------------
@@ -75,7 +67,6 @@ def simulate_scenario(title: str, steps: list):
             print("  HealthOS: (No further input required)")
         print("-" * 60)
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     print("\nFinal State:")
     print_schema(schema)
 
@@ -89,17 +80,10 @@ def run_all_scenarios():
         "Scenario 1: Direct Doctor Booking (User knows doctor)",
         [
             {
-<<<<<<< HEAD
-                "_user_utterance": "I want an appointment with Dr. Sharma in Cardiology",
-                "greeter_intent": "booking",
-                "department_section": {"department": "Cardiology"},
-                "booking_section": {"doctor_name": "Dr. Sharma"},
-=======
                 "_user_utterance": "I want an appointment with Dr. Kiran Mehta in Cardiology",
                 "greeter_intent": "booking",
                 "department_section": {"department": "Cardiology"},
                 "booking_section": {"doctor_name": "Dr. Kiran Mehta"},
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
             },
             {
                 "_user_utterance": "Tomorrow please",
@@ -121,13 +105,8 @@ def run_all_scenarios():
                 "department_section": {"department": "Dermatology"},
             },
             {
-<<<<<<< HEAD
-                "_user_utterance": "Let's book Dr. Smith",
-                "booking_section": {"doctor_name": "Dr. Smith"},
-=======
                 "_user_utterance": "Let's book Dr. Pooja Sharma",
                 "booking_section": {"doctor_name": "Dr. Pooja Sharma"},
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
             },
             {
                 "_user_utterance": "Next Monday",
@@ -160,13 +139,8 @@ def run_all_scenarios():
                 },
             },
             {
-<<<<<<< HEAD
-                "_user_utterance": "I want to consult Dr. Mehta",
-                "booking_section": {"doctor_name": "Dr. Mehta"},
-=======
                 "_user_utterance": "I want to consult Dr. Kiran Mehta",
                 "booking_section": {"doctor_name": "Dr. Kiran Mehta"},
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
             },
             {
                 "_user_utterance": "Friday at 4 PM",
@@ -175,8 +149,6 @@ def run_all_scenarios():
         ],
     )
 
-<<<<<<< HEAD
-=======
     simulate_scenario(
         "Scenario 4: End-to-End Real Booking Flow (Department -> Doctor Candidates -> Slot Selection -> Execution)",
         [
@@ -255,7 +227,6 @@ def run_all_scenarios():
         ],
     )
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 def interactive_demo():
     print("\n" + "=" * 70)
@@ -265,15 +236,11 @@ def interactive_demo():
 
     resolver = TaskResolver()
     engine = DependencyEngine()
-<<<<<<< HEAD
-    schema = create_empty_schema()
-=======
     booking_connector = BookingConnector()
     slm_engine = SLMEngine()
     response_agent = ResponseGeneratorAgent(booking_connector)
     schema = create_empty_schema()
     available_depts = booking_connector.get_available_departments()
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
     print("\nInitial schema loaded. Try entering doctor name, department, or symptoms.")
 
@@ -299,31 +266,6 @@ def interactive_demo():
             continue
 
         update = {}
-<<<<<<< HEAD
-        if curr_dep == "doctor_name":
-            update["booking_section"] = {"doctor_name": user_input}
-        elif curr_dep == "date":
-            update["booking_section"] = {"date": user_input}
-        elif curr_dep == "time_slot":
-            update["booking_section"] = {"time_slot": user_input}
-        elif curr_dep == "symptoms":
-            update["symptom_section"] = {"symptoms": [user_input]}
-        elif curr_dep == "department":
-            update["department_section"] = {"department": user_input}
-        else:
-            low = user_input.lower()
-            if "emergency" in low or "chest pain" in low:
-                update["greeter_intent"] = "emergency"
-            elif "dr." in low or "doctor" in low:
-                update["greeter_intent"] = "booking"
-                update["booking_section"] = {"doctor_name": user_input}
-            elif any(d in low for d in ["cardiology", "dermatology", "neurology", "orthopedics"]):
-                update["greeter_intent"] = "booking"
-                update["department_section"] = {"department": user_input}
-            else:
-                update["greeter_intent"] = "triage"
-                update["symptom_section"] = {"symptoms": [user_input]}
-=======
         if curr_dep == "department":
             if schema.get("department_section", {}).get("is_ambiguous", False) and slm_engine.is_user_undecided(user_input):
                 print("  ⚡ [SLM Decision] User undecided -> Routing to General Medicine.")
@@ -369,7 +311,6 @@ def interactive_demo():
                     b_patch[f] = extracted[f]
             if b_patch:
                 update["booking_section"] = b_patch
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
         schema = merge_schema_update(schema, update)
         resolver.update_schema_task(schema)
@@ -377,18 +318,6 @@ def interactive_demo():
         engine.update_schema_state(schema)
 
         if action_plan.get("action") == "RUN_SYSTEM" and action_plan.get("dependency") == "department":
-<<<<<<< HEAD
-            print("  ⚡ [System Auto-Trigger] Running department_classifier...")
-            schema = merge_schema_update(schema, {
-                "department_section": {
-                    "department": "General Medicine",
-                    "source": "department_classifier",
-                    "confidence": 0.90,
-                }
-            })
-            action_plan = engine.get_next_action(schema)
-            engine.update_schema_state(schema)
-=======
             symptoms = schema.get("symptom_section", {}).get("symptoms", [])
             print(f"  ⚡ [SLM Department Classifier] Inferring department for: {symptoms}...")
             classification = slm_engine.classify_department(symptoms, available_depts)
@@ -419,13 +348,10 @@ def interactive_demo():
                 success = booking_connector.execute_booking(slot_id, patient)
                 schema["booking_section"]["booking_confirmed"] = success
                 schema["booking_section"]["booking_slot_id"] = slot_id
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
         print_schema(schema)
         print(f"\nNext Action: {action_plan.get('action')} | Dependency: {action_plan.get('dependency')}")
 
-<<<<<<< HEAD
-=======
         print("\n" + "-" * 60)
         print("  RESPONSE GENERATOR AGENT")
         print("-" * 60)
@@ -434,7 +360,6 @@ def interactive_demo():
             print(f"  HealthOS:\n{agent_response}")
         print("-" * 60)
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 if __name__ == "__main__":
     import argparse

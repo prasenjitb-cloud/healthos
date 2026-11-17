@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import argparse
-import json
-import llama_cpp
-import transformers
-
-
-def load_config(config_file):
-    with open(config_file, "r") as f:
-        return json.load(f)
-
-
-def load_slm(config_data, model_name):
-=======
 """
 guardrail_agent.py
 
@@ -42,7 +28,6 @@ def load_config(config_file: str) -> dict:
 
 def load_slm(config_data: dict, model_name: str):
     import llama_cpp
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
     if model_name not in config_data:
         raise ValueError(f"Config '{model_name}' not found")
@@ -53,30 +38,12 @@ def load_slm(config_data: dict, model_name: str):
         model_path=model_config["model_path"],
         n_ctx=model_config["n_ctx"],
         n_threads=model_config["n_threads"],
-<<<<<<< HEAD
-        verbose=model_config["verbose"]
-=======
         verbose=model_config.get("verbose", False),
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     )
 
     return slm, model_config
 
 
-<<<<<<< HEAD
-def load_guard_model(config_data):
-
-    guard_config = config_data["guard_model"]
-
-    return transformers.pipeline(
-        "text-classification",
-        model=guard_config["model_name"]
-    )
-
-
-def generate_response(slm, model_config, prompt: str):
-
-=======
 def load_guard_model(config_data: dict):
     """
     Attempts to load the text-classification pipeline if transformers is installed.
@@ -105,34 +72,11 @@ def load_guard_model(config_data: dict):
 
 
 def generate_response(slm, model_config, prompt: str):
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     output = slm(
         prompt,
         max_tokens=model_config["max_tokens"],
         temperature=model_config["temperature"],
         top_p=model_config["top_p"],
-<<<<<<< HEAD
-        stop=model_config.get("stop", ["</s>"])
-    )
-
-    return output["choices"][0]["text"].strip()
-
-
-def check_safety(guard_model, config_data, text: str):
-
-    threshold = config_data["guard_model"]["threshold"]
-
-    result = guard_model(text)[0]
-
-    if result["label"] == "toxic" and result["score"] > threshold:
-        return False, result["score"]
-
-    return True, result["score"]
-
-
-def safe_chat_flow(slm, guard_model, config_data, model_config, user_query: str):
-
-=======
         stop=model_config.get("stop", ["</s>"]),
     )
     return output["choices"][0]["text"].strip()
@@ -254,7 +198,6 @@ def check_safety(guard_model, config_data: Any, text: str, slm_engine=None) -> T
 
 
 def safe_chat_flow(slm, guard_model, config_data, model_config, user_query: str):
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     max_retries = 2
 
     input_safe, input_score = check_safety(guard_model, config_data, user_query)
@@ -268,16 +211,8 @@ def safe_chat_flow(slm, guard_model, config_data, model_config, user_query: str)
     current_prompt = user_query
 
     for attempt in range(max_retries + 1):
-<<<<<<< HEAD
-
-        print(f"\n--- Attempt {attempt + 1}: Generating Response ---")
-
-        response = generate_response(slm, model_config, current_prompt)
-
-=======
         print(f"\n--- Attempt {attempt + 1}: Generating Response ---")
         response = generate_response(slm, model_config, current_prompt)
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
         print("Generated:", response)
 
         is_safe, score = check_safety(guard_model, config_data, response)
@@ -285,16 +220,8 @@ def safe_chat_flow(slm, guard_model, config_data, model_config, user_query: str)
         if is_safe:
             print(f"PASS | Output Toxicity Score: {score:.2f}")
             return response
-<<<<<<< HEAD
-
-        else:
-
-            print(f"FAIL | Toxicity Detected ({score:.2f})")
-
-=======
         else:
             print(f"FAIL | Toxicity Detected ({score:.2f})")
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
             if attempt < max_retries:
                 current_prompt = (
                     "Rewrite the following text in a professional and safe manner:\n\n"
@@ -305,50 +232,13 @@ def safe_chat_flow(slm, guard_model, config_data, model_config, user_query: str)
 
 
 def parse_args():
-<<<<<<< HEAD
-
-    parser = argparse.ArgumentParser(description="Safe Local Chatbot")
-
-    parser.add_argument(
-        "-configfile",
-        required=True,
-        help="Path to config JSON file"
-    )
-
-    parser.add_argument(
-        "-config",
-        required=True,
-        help="Model configuration name"
-    )
-
-=======
     parser = argparse.ArgumentParser(description="Safe Local Chatbot")
     parser.add_argument("-configfile", required=True, help="Path to config JSON file")
     parser.add_argument("-config", required=True, help="Model configuration name")
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     return parser.parse_args()
 
 
 def main():
-<<<<<<< HEAD
-
-    args = parse_args()
-
-    config_data = load_config(args.configfile)
-
-    slm, model_config = load_slm(config_data, args.config)
-
-    guard_model = load_guard_model(config_data)
-
-    print("\n🛡️ Safe Local Chatbot")
-    print("Type your question.")
-    print("Commands: 'exit', 'quit'\n")
-
-    while True:
-
-        user_input = input("You: ")
-
-=======
     args = parse_args()
     config_data = load_config(args.configfile)
     slm, model_config = load_slm(config_data, args.config)
@@ -359,23 +249,11 @@ def main():
 
     while True:
         user_input = input("You: ")
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
         if user_input.lower() in ("exit", "quit"):
             print("\nChatbot: Stay safe!")
             break
 
-<<<<<<< HEAD
-        final_output = safe_chat_flow(
-            slm,
-            guard_model,
-            config_data,
-            model_config,
-            user_input
-        )
-
-=======
         final_output = safe_chat_flow(slm, guard_model, config_data, model_config, user_input)
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
         print("\nChatbot:", final_output, "\n")
 
 

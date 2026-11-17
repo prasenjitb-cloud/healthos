@@ -124,8 +124,6 @@ class DependencyEngine:
         dependency_config = derived_dependencies.get(dependency)
 
         if dependency_config:
-<<<<<<< HEAD
-=======
             # If department was already evaluated and flagged ambiguous,
             # system generation cannot resolve it automatically; ask user directly.
             if dependency == "department" and schema is not None:
@@ -136,7 +134,6 @@ class DependencyEngine:
                         "message_type": "user_dependency_due_to_ambiguity",
                     }
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
             required_inputs = dependency_config.get(
                 "depends_on",
                 [],

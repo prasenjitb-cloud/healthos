@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-# HealthOS – Agentic Routing System
-=======
 # HealthOS — Agentic Routing & Dynamic State System
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 ---
 
 ## Project Structure
@@ -48,8 +44,6 @@ It drives chat-based appointment bookings bottom-up across three primary user wo
 
 ---
 
-<<<<<<< HEAD
-=======
 ## Architecture Flow
 
 ```
@@ -84,7 +78,6 @@ State Update (schema["stage"] & schema["current_dependency"])
 
 ---
 
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 ## Core Modules
 
 ### 1. `task_definitions.py`
@@ -131,15 +124,6 @@ Evaluates the current state against task dependencies to determine the exact nex
 ### 5. `greeter_agent.py`
 Intent detection and initial conversational routing agent powered by LangGraph and local SLM (TinyLLaMA via `llama.cpp`).
 
-<<<<<<< HEAD
-## Verification & Testing
-
-### Running the Live Demo
-There are two ways to demonstrate the Dynamic State & Dependency Engine:
-
-#### 1. Automated Walkthrough (All 3 Scenarios)
-Runs a turn-by-turn simulation of all three booking scenarios and prints the dynamic schema progression:
-=======
 ---
 
 ## Verification & Testing
@@ -197,23 +181,11 @@ python3 agents/run_custom_pipeline.py -i
 
 #### 3. Automated Walkthrough (Scenarios 1–4)
 Runs a turn-by-turn simulation of all four booking scenarios (including end-to-end real booking execution):
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 ```bash
 python3 agents/demo_scenarios.py
 ```
 
-<<<<<<< HEAD
-#### 2. Live Interactive Terminal Demo
-Allows you to type directly in the terminal to test doctor booking, department choice, or symptoms live:
-
-```bash
-python3 agents/demo_scenarios.py -i
-```
-*(Commands during chat: `reset` to clear schema, `exit` to quit)*
-
-=======
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 ---
 
 ### Running the LLM Chat Agent (`greeter_agent.py`)
@@ -223,9 +195,3 @@ To run the interactive LangGraph greeter agent with the local SLM:
 cd agents
 python3 greeter_agent.py -configfile ../config.json -config BioMedLM_CONFIG
 ```
-<<<<<<< HEAD
-
----
-
-=======
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)

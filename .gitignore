@@ -58,7 +58,4 @@ htmlcov/
 build/
 dist/
 *.egg-info/
-EOFTrails/
-
-# Exclude agent test files
-agents/test_*.py
+EOF

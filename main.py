@@ -1,68 +1,3 @@
-<<<<<<< HEAD
-import json
-import argparse
-import llama_cpp
-import prompts as local_prompts
-
-
-def load_config(config_file):
-    with open(config_file, "r") as f:
-        return json.load(f)
-
-
-def load_slm(config_data, model_name):
-
-    if model_name not in config_data:
-        raise ValueError(f"Config '{model_name}' not found in config file")
-
-    model_config = config_data[model_name]
-
-    slm = llama_cpp.Llama(
-        model_path=model_config["model_path"],
-        n_ctx=model_config["n_ctx"],
-        n_threads=model_config["n_threads"],
-        verbose=model_config["verbose"]
-    )
-
-    return slm, model_config
-
-
-def generate_response(slm, model_config, user_input):
-
-    messages = [
-        {"role": "system", "content": local_prompts.SYSTEM_PROMPT},
-        {"role": "user", "content": user_input}
-    ]
-
-    response = slm.create_chat_completion(
-        messages=messages,
-        temperature=model_config["temperature"],
-        top_p=model_config["top_p"],
-        max_tokens=model_config["max_tokens"]
-    )
-
-    reply = response["choices"][0]["message"]["content"]
-
-    return reply
-
-
-def parse_args():
-
-    parser = argparse.ArgumentParser(description="Offline Medical Chatbot")
-
-    parser.add_argument(
-        "-configfile",
-        required=True,
-        help="Path to config JSON file"
-    )
-
-    parser.add_argument(
-        "-config",
-        required=True,
-        help="Model configuration name inside config file"
-    )
-
-=======
 """
 main.py
 
@@ -100,6 +35,7 @@ from state_schema import (
     print_schema,
     is_schema_complete,
     get_missing_fields,
+    format_clinical_audit,
 )
 from task_resolver import TaskResolver
 from dependency_engine import DependencyEngine
@@ -266,6 +202,7 @@ class HealthOSPipeline:
             if classification.get("is_ambiguous"):
                 schema["department_section"]["is_ambiguous"] = True
                 schema["department_section"]["confidence"] = classification.get("confidence", 0.5)
+                schema["department_section"]["reasoning"] = classification.get("reasoning", "Vague or multi-system symptoms.")
                 schema["department_section"]["source"] = "slm_department_classifier"
                 action_plan = self.dependency_engine.get_next_action(schema)
                 self.dependency_engine.update_schema_state(schema)
@@ -275,6 +212,7 @@ class HealthOSPipeline:
                         "department": classification.get("department"),
                         "source": "slm_department_classifier",
                         "confidence": classification.get("confidence", 0.95),
+                        "reasoning": classification.get("reasoning", "Clinical triage mapped symptoms to specialty."),
                         "is_ambiguous": False,
                     }
                 })
@@ -330,39 +268,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description="HealthOS Master Medical System")
     parser.add_argument("-configfile", default="config.json", help="Path to config JSON file")
     parser.add_argument("-config", default="BioMedLM_CONFIG", help="Model configuration name")
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
     return parser.parse_args()
 
 
 def main():
-<<<<<<< HEAD
-
-    args = parse_args()
-
-    config_data = load_config(args.configfile)
-
-    slm, model_config = load_slm(config_data, args.config)
-
-    print("\n🩺 Offline Medical Assistance Chatbot")
-    print("Type your health-related question.")
-    print("Commands: 'exit', 'quit', 'reset'\n")
-
-    while True:
-
-        user_input = input("You: ")
-
-        if user_input.lower() in ("exit", "quit"):
-            print("\nChatbot: Take care!")
-            break
-
-        if user_input.lower() == "reset":
-            print("\nChatbot: Conversation reset. Memory is retained.\n")
-            continue
-
-        response = generate_response(slm, model_config, user_input)
-
-        print("\nChatbot:", response, "\n")
-=======
     args = parse_args()
     config_data = load_config(args.configfile)
 
@@ -372,7 +281,7 @@ def main():
     print("=" * 70)
     print("🩺 HealthOS: Agentic Medical Appointment & Triage System")
     print("Type your symptoms, medical concerns, or booking request.")
-    print("Commands: 'reset' to start over, 'schema' to view state, 'exit' to quit.")
+    print("Commands: 'reset' to start over, 'schema' to view state, 'audit' for triage card, 'exit' to quit.")
     print("=" * 70 + "\n")
 
     while True:
@@ -394,10 +303,12 @@ def main():
         if user_input.lower() == "schema":
             print_schema(schema)
             continue
+        if user_input.lower() in ("audit", "card", "triage"):
+            print("\n" + format_clinical_audit(schema) + "\n")
+            continue
 
         response, schema = pipeline.process_turn(user_input, schema)
         print(f"\nHealthOS:\n{response}\n")
->>>>>>> d10637a (Backup: Complete local HealthOS implementation)
 
 
 if __name__ == "__main__":
