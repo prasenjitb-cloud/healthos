@@ -6,18 +6,20 @@
 
 ```bash
 agents/
-├── task_definitions.py        # Task enums, dependency chains & derived generators
-├── state_schema.py            # DynamicStateSchema (TypedDict), safe merge & completeness checks
-├── task_resolver.py           # Intent + extracted entities → Task mapping
-├── dependency_engine.py       # Next-action workflow controller (ASK_USER / RUN_SYSTEM / COMPLETE)
-├── greeter_agent.py           # Intent detection & LangGraph routing agent
-├── guardrail_agent.py         # Safety & input guardrails
-├── demo_scenarios.py          # Interactive simulation demo for all 3 booking scenarios
-├── test_state_schema.py       # Unit tests for Dynamic State Schema
-├── test_dependency_engine.py  # Unit tests for Dependency Engine
-├── test_task_resolver.py      # Unit tests for Task Resolver
+├── booking_connector.py        # Real doctor/slot lookups, name normalization & atomic booking
+├── demo_scenarios.py           # Automated walkthroughs (Scenarios 1-5) & interactive terminal mode
+├── dependency_engine.py        # Next-action workflow controller (ASK_USER / RUN_SYSTEM / COMPLETE)
+├── greeter_agent.py            # Intent detection & LangGraph routing agent
+├── guardrail_agent.py          # Safety guardrails (ToxicBERT & harmful intent interception)
+├── response_generator_agent.py # Context-aware response generator & options formatter
+├── run_custom_pipeline.py      # Multi-turn CLI tester & pure SLM decision execution pipeline
+├── slm_engine.py               # Local SLM decision engine (intent, extraction, department & ambiguity)
+├── state_schema.py             # DynamicSchema (TypedDict), safe merge & clinical audit cards
+├── task_definitions.py         # Task enums, dependency chains & derived generators
+├── task_resolver.py            # Intent + extracted entities → Task resolution
+├── README.md                   # Agent module documentation
 └── usecases/
-    └── conversations.jsonl    # Benchmark conversation flows
+    └── conversations.jsonl     # Benchmark conversation flows
 ```
 
 ---
@@ -26,21 +28,27 @@ agents/
 
 This module implements the **Dynamic Data Dependency & Agentic Workflow Engine** for HealthOS.
 
-It drives chat-based appointment bookings bottom-up across three primary user workflows, backed by safety guardrails, emergency detection, and SLM integration.
+It drives chat-based appointment bookings bottom-up across core clinical workflows, backed by safety guardrails, emergency detection, real synthetic slot booking, and local Small Language Model (SLM) decision-making with zero hardcoded keyword heuristics.
 
-### The 3 Core Booking Scenarios
+### The Core Booking Scenarios
 
 1. **Direct Doctor Booking**
    - *User Situation:* Knows the specific doctor they want to see (and optionally department).
-   - *Workflow:* Extracts doctor name $\rightarrow$ collects date and time slot $\rightarrow$ completes booking.
+   - *Workflow:* Extracts doctor name $\rightarrow$ collects date and time slot $\rightarrow$ executes slot booking.
 2. **Department Booking**
-   - *User Situation:* Knows the medical department/specialization, but not the doctor.
-   - *Workflow:* Captures department $\rightarrow$ lists available doctors in that department $\rightarrow$ collects doctor choice, date, and time slot $\rightarrow$ completes booking.
+   - *User Situation:* Knows the medical department/specialization, but not the specific doctor.
+   - *Workflow:* Captures department $\rightarrow$ lists available doctors $\rightarrow$ collects doctor choice, date, and slot $\rightarrow$ completes booking.
 3. **Symptom-Based Booking**
    - *User Situation:* Unaware of department or doctor, only knows symptoms.
-   - *Workflow:* Collects symptoms $\rightarrow$ runs system `department_classifier` $\rightarrow$ suggests department & lists available doctors $\rightarrow$ collects date and time slot $\rightarrow$ completes booking.
-4. **Emergency Override**
-   - Immediate safety override for critical symptoms (e.g., severe chest pain, shortness of breath), routing to emergency guidance without booking delay.
+   - *Workflow:* Collects symptoms $\rightarrow$ runs SLM `department_classifier` $\rightarrow$ suggests department & lists doctors $\rightarrow$ collects slot $\rightarrow$ completes booking.
+4. **End-to-End Real Booking with Atomic Confirmation**
+   - *User Situation:* Selects doctors and slots dynamically from real synthetic databases.
+   - *Workflow:* Validates doctor availability $\rightarrow$ retrieves open slots $\rightarrow$ marks slot booked in `slots.json` $\rightarrow$ generates confirmation.
+5. **Ambiguity Handling & General Medicine Indecision Fallback**
+   - *User Situation:* Symptoms are multi-system or vague (e.g., general fatigue and body aches).
+   - *Workflow:* SLM detects ambiguity $\rightarrow$ prompts user for preferred department $\rightarrow$ if user is undecided, safely routes to General Medicine.
+6. **Emergency Override**
+   - Immediate safety override for critical symptoms (e.g., severe chest pain, shortness of breath), routing to emergency guidance without booking delays.
 
 ---
 
@@ -50,10 +58,10 @@ It drives chat-based appointment bookings bottom-up across three primary user wo
 User Message
     │
     ▼
-Guardrail Agent (Safety & Toxicity Filtering)
+Guardrail Agent (ToxicBERT Safety & Harm Interception)
     │
     ▼
-Greeter Agent (Intent: Emergency / Booking / Triage)
+SLM Engine / Greeter Agent (Intent Classification & Entity Extraction)
     │
     ▼
 Task Resolver (agents/task_resolver.py)
@@ -61,9 +69,9 @@ Task Resolver (agents/task_resolver.py)
     │  - Selects Task: DIRECT_BOOKING | DEPARTMENT_BOOKING | SYMPTOM_BASED_BOOKING | EMERGENCY
     ▼
 Dynamic State Schema (agents/state_schema.py)
-    │  - Maintains conversation state across turns
-    │  - Non-destructive updates: None never overwrites existing data
-    │  - Tracks missing fields & task completeness
+    │  - Maintains conversation state across multi-turn sessions
+    │  - Non-destructive updates: None never overwrites existing clinical data
+    │  - Tracks missing fields, task completeness & clinical audit trail
     ▼
 Dependency Engine (agents/dependency_engine.py)
     │  - Walks TASK_DEPENDENCIES in order
@@ -73,7 +81,11 @@ Dependency Engine (agents/dependency_engine.py)
     │      • COMPLETE: All dependencies satisfied, ready for slot booking
     │      • EMERGENCY: Routes immediately to emergency protocol
     ▼
-State Update (schema["stage"] & schema["current_dependency"])
+Booking Connector & Response Generator (agents/response_generator_agent.py)
+    │  - In-memory indexed synthetic doctors & open slots
+    │  - Formats options and generates empathetic, fact-verified responses
+    ▼
+Confirmed Booking / Output to User
 ```
 
 ---
@@ -93,16 +105,14 @@ Defines supported tasks, ordered dependency sequences, and derived generator map
 Central dictionary-based conversation state (`DynamicSchema` using `TypedDict`):
 - **Sections:**
   - `symptom_section`: `symptoms` (list of strings), `severity`.
-  - `department_section`: `department`, `source`, `confidence`.
-  - `booking_section`: `doctor_name`, `date`, `time_slot`, `hospital`, `doctor_valid`, `doctor_candidates`.
+  - `department_section`: `department`, `source`, `confidence`, `is_ambiguous`.
+  - `booking_section`: `doctor_name`, `date`, `time_slot`, `hospital`, `doctor_valid`, `doctor_candidates`, `selected_slot`, `booking_confirmed`.
 - **Key Functions:**
   - `create_empty_schema()`: Initializes blank state.
   - `merge_schema_update(current, update)`: Merges new extractions without overwriting existing data with `None`. Automatically normalizes and deduplicates symptoms.
-  - `get_dependency_value(schema, dependency)`: Retrieves dependency value across sections.
-  - `is_dependency_satisfied(schema, dependency)`: Checks if a required field is populated.
+  - `format_clinical_audit(schema)`: Formats a structured explainability audit card for medical reviewers.
   - `is_schema_complete(schema)`: Returns `True` when all required fields for the task are satisfied.
   - `get_missing_fields(schema)`: Returns ordered list of remaining required fields.
-  - `DynamicStateSchema`: Object-oriented backward compatibility wrapper for existing LangGraph workflows.
 
 ### 3. `task_resolver.py`
 Determines which workflow task should handle the session:
@@ -119,79 +129,84 @@ Evaluates the current state against task dependencies to determine the exact nex
 - `RUN_SYSTEM`: When a system generator is required (e.g., department classification).
 - `COMPLETE`: When all dependencies for the selected task are satisfied.
 - `EMERGENCY`: When an emergency state is active.
-- `update_schema_state(schema)`: Automatically updates `schema["current_dependency"]` and `schema["stage"]` (e.g., `collecting_date`, `generating_department`, `ready`).
+- `update_schema_state(schema)`: Automatically updates `schema["current_dependency"]` and `schema["stage"]`.
 
-### 5. `greeter_agent.py`
-Intent detection and initial conversational routing agent powered by LangGraph and local SLM (TinyLLaMA via `llama.cpp`).
+### 5. `booking_connector.py`
+Integration layer with synthetic clinical databases (`doctors.json` and `slots.json`):
+- In-memory indexed data lookups for doctors and appointment slots.
+- Name normalization and fuzzy/token-based doctor resolution.
+- Flexible slot resolution (1-based index or 12h/24h time matching).
+- Real atomic booking execution.
+
+### 6. `response_generator_agent.py`
+Generates human-like, context-aware responses when schema sections are missing:
+- Presents numbered doctor and slot choices from real synthetic data.
+- Handles invalid input clarification and reprompting.
+- Confirms bookings upon dependency satisfaction.
+
+### 7. `slm_engine.py`
+Pure SLM decision engine eliminating keyword heuristics:
+- Semantic intent classification (Emergency vs Booking vs Triage).
+- Entity extraction (`symptoms`, `doctor_name`, `department`, `date`, `time_slot`).
+- Symptom-to-department classification with ambiguity detection.
+- Indecision detection (routes to General Medicine when patient cannot choose).
+
+### 8. `guardrail_agent.py`
+Safety guardrail powered by `unitary/toxic-bert` with pattern fallback:
+- Evaluates incoming patient utterances for toxicity, harassment, and severe harm requests.
+- Halts execution and displays safe emergency rejection message if toxicity threshold is breached.
+
+### 9. `greeter_agent.py`
+Intent detection and initial conversational routing agent powered by LangGraph and local SLM (`llama.cpp`).
 
 ---
 
 ## Verification & Testing
 
-### Running Unit Tests
-All layers are verified with 23 automated unit tests:
-
-```bash
-# Activate virtual environment
-source myenv/bin/activate
-
-# Run all test suites
-python3 -m unittest discover -s agents -p "test_*.py" -v
-```
-
-### Running Individual Test Suites
-```bash
-python3 agents/test_state_schema.py
-python3 agents/test_dependency_engine.py
-python3 agents/test_task_resolver.py
-python3 agents/test_booking_connector.py
-python3 agents/test_response_generator.py
-
-# Or run all unit tests together:
-python3 -m unittest discover agents/
-```
-
 ### Running the Live Demos & Testing Custom Inputs
 
-There are three ways to test and run the HealthOS Pipeline:
+There are three ways to test and run the HealthOS Agent Pipeline:
 
 #### 1. Test with Your Own Custom Inputs (CLI Arguments)
 Pass any sequence of user turns as command-line arguments to test how the pipeline handles them:
 
 ```bash
 # Example 1: Direct department booking with slot selection
-python3 agents/run_custom_pipeline.py "I want to see a cardiologist" "1" "1"
+python agents/run_custom_pipeline.py "I want to see a cardiologist" "1" "1"
 
-# Example 2: Testing error recovery with an invalid doctor name
-python3 agents/run_custom_pipeline.py "I want to see a cardiologist" "Dr. Strange" "1" "1"
+# Example 2: Ambiguity detection & indecision fallback to General Medicine
+python agents/run_custom_pipeline.py "I feel tired and have mild nausea with joint discomfort" "I am not sure" "1" "1"
 
 # Example 3: Symptom triage flow
-python3 agents/run_custom_pipeline.py "I have severe chest pain"
+python agents/run_custom_pipeline.py "I have severe chest pain"
 ```
 
 #### 2. Live Interactive Terminal Demo (Chat Mode)
 Launch an interactive terminal session where you can chat turn-by-turn with the agent, test edge cases, pick doctors, and confirm real slots:
 
 ```bash
-python3 agents/demo_scenarios.py -i
+python agents/demo_scenarios.py -i
 # or
-python3 agents/run_custom_pipeline.py -i
+python agents/run_custom_pipeline.py -i
 ```
 *(Special commands during chat: type `reset` to clear schema and restart, `exit` to quit)*
 
-#### 3. Automated Walkthrough (Scenarios 1–4)
-Runs a turn-by-turn simulation of all four booking scenarios (including end-to-end real booking execution):
+#### 3. Automated Walkthrough (Scenarios 1–5)
+Runs a turn-by-turn simulation of all five clinical booking and fallback scenarios (including real booking execution):
 
 ```bash
-python3 agents/demo_scenarios.py
+python agents/demo_scenarios.py
 ```
 
 ---
 
-### Running the LLM Chat Agent (`greeter_agent.py`)
+### Running the LangGraph Chat Agent (`greeter_agent.py`)
 To run the interactive LangGraph greeter agent with the local SLM:
 
 ```bash
-cd agents
-python3 greeter_agent.py -configfile ../config.json -config BioMedLM_CONFIG
+# From repository root
+python agents/greeter_agent.py -configfile config.json -config BioMedLM_CONFIG
+
+# Or with TinyLlama:
+python agents/greeter_agent.py -configfile config.json -config TinyLlama_CONFIG
 ```
