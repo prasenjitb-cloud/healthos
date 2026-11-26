@@ -16,3 +16,7 @@ transformers>=4.40.0
 
 # Interactive Web Application
 streamlit>=1.30.0
+
+# Clinical Observability & Traceability
+langsmith>=0.1.0
+python-dotenv>=1.0.0

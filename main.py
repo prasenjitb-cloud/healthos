@@ -45,6 +45,21 @@ from slm_engine import SLMEngine
 from guardrail_agent import load_guard_model, check_safety
 import vector_memory
 
+try:
+    from observability import traceable, is_tracing_active, get_project_name, attach_clinical_audit_metadata
+except ImportError:
+    try:
+        from agents.observability import traceable, is_tracing_active, get_project_name, attach_clinical_audit_metadata
+    except ImportError:
+        def traceable(*args, **kwargs):
+            return lambda fn: fn
+        def is_tracing_active():
+            return False
+        def get_project_name():
+            return "HealthOS-Clinical-Observability"
+        def attach_clinical_audit_metadata(schema, extra=None):
+            pass
+
 
 def load_config(config_file: str) -> dict:
     if not os.path.isabs(config_file):
@@ -86,8 +101,15 @@ class HealthOSPipeline:
         self.response_agent = ResponseGeneratorAgent(self.booking_connector)
         self.available_departments = self.booking_connector.get_available_departments()
 
+        # 5. Observability Status
+        if is_tracing_active():
+            print(f"  • LangSmith Observability: ACTIVE (Project: {get_project_name()})")
+        else:
+            print("  • LangSmith Observability: STANDBY (Configure .env with API key to record live traces)")
+
         print("HealthOS Pipeline ready.\n")
 
+    @traceable(name="HealthOS_Consultation_Turn", run_type="chain", tags=["clinical_consultation"])
     def process_turn(self, user_input: str, schema: dict) -> Tuple[str, dict]:
         """
         Executes a single conversational turn through the end-to-end pipeline.
@@ -260,6 +282,9 @@ class HealthOSPipeline:
         out_safe, _ = check_safety(self.guard_model, self.config_data, response, slm_engine=self.slm_engine)
         if not out_safe:
             response = "I apologize, but I must provide safe health assistance. Please consult a licensed physician."
+
+        # Attach clinical explainability audit to active LangSmith trace
+        attach_clinical_audit_metadata(schema, extra={"final_response": response})
 
         return response, schema
 

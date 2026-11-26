@@ -29,6 +29,17 @@ from state_schema import (
     is_schema_complete,
 )
 
+try:
+    from observability import is_tracing_active, get_project_name
+except ImportError:
+    try:
+        from agents.observability import is_tracing_active, get_project_name
+    except ImportError:
+        def is_tracing_active():
+            return False
+        def get_project_name():
+            return "HealthOS-Clinical-Observability"
+
 # -----------------------------------------------------------------------------
 # 1. PAGE CONFIGURATION
 # -----------------------------------------------------------------------------
@@ -139,7 +150,17 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # D. Quick Test Scenarios for Evaluators
+    # D. LangSmith LLMOps Observability
+    st.subheader("🔍 LangSmith Observability")
+    if is_tracing_active():
+        st.success(f"🟢 **Tracing Active**\n\nProject: `{get_project_name()}`")
+        st.markdown("[Open LangSmith Dashboard ↗](https://smith.langchain.com)")
+    else:
+        st.info("⚪ **Tracing Standby**\n\nSet `LANGCHAIN_API_KEY` in `.env` to record real-time LLMOps traces.")
+
+    st.markdown("---")
+
+    # E. Quick Test Scenarios for Evaluators
     st.subheader("⚡ Quick Evaluator Scenarios")
     if st.button("🚨 Emergency Test", use_container_width=True):
         handle_turn("I have crushing chest pain and cannot breathe")

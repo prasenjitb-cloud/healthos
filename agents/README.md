@@ -11,6 +11,7 @@ agents/
 ├── dependency_engine.py        # Next-action workflow controller (ASK_USER / RUN_SYSTEM / COMPLETE)
 ├── greeter_agent.py            # Intent detection & LangGraph routing agent
 ├── guardrail_agent.py          # Safety guardrails (ToxicBERT & harmful intent interception)
+├── observability.py            # LangSmith LLMOps tracing & clinical explainability bridge
 ├── response_generator_agent.py # Context-aware response generator & options formatter
 ├── run_custom_pipeline.py      # Multi-turn CLI tester & pure SLM decision execution pipeline
 ├── slm_engine.py               # Local SLM decision engine (intent, extraction, department & ambiguity)
@@ -158,6 +159,12 @@ Safety guardrail powered by `unitary/toxic-bert` with pattern fallback:
 
 ### 9. `greeter_agent.py`
 Intent detection and initial conversational routing agent powered by LangGraph and local SLM (`llama.cpp`).
+
+### 10. `observability.py`
+LangSmith clinical observability and LLMOps tracing bridge:
+- Transparent execution tracing for guardrail confidence, SLM extraction, triage ambiguity, and dependency transitions.
+- Exports structured Clinical Triage Audit Cards (`format_clinical_audit`) as run metadata for physician inspection.
+- Zero-latency offline fallback when unconfigured.
 
 ---
 

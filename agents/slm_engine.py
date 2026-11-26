@@ -18,6 +18,15 @@ import re
 import json
 from typing import Dict, Any, List, Optional, Tuple
 
+try:
+    from observability import traceable
+except ImportError:
+    try:
+        from agents.observability import traceable
+    except ImportError:
+        def traceable(*args, **kwargs):
+            return lambda fn: fn
+
 
 class SLMEngine:
     """
@@ -133,6 +142,7 @@ class SLMEngine:
     # 1. SLM INTENT & ENTITY EXTRACTION (NO KEYWORD CHECKS)
     # =========================================================================
 
+    @traceable(name="SLM_Intent_And_Entity_Extraction", run_type="llm", tags=["slm", "extraction"])
     def classify_intent_and_entities(
         self,
         user_message: str,
@@ -203,6 +213,7 @@ class SLMEngine:
     # 2. SLM DEPARTMENT CLASSIFICATION & AMBIGUITY DETECTION
     # =========================================================================
 
+    @traceable(name="SLM_Department_Triage", run_type="llm", tags=["slm", "triage"])
     def classify_department(
         self,
         symptoms: List[str],
@@ -281,6 +292,7 @@ class SLMEngine:
     # 3. USER INDECISION DETECTION (FALLBACK TO GENERAL MEDICINE)
     # =========================================================================
 
+    @traceable(name="SLM_Indecision_Detection", run_type="llm", tags=["slm", "fallback"])
     def is_user_undecided(self, user_message: str) -> bool:
         """
         Uses SLM to determine if the user is expressing indecision or inability

@@ -71,11 +71,7 @@ def simulate_scenario(title: str, steps: list):
     print_schema(schema)
 
 
-def run_all_scenarios():
-    print("=" * 70)
-    print("HealthOS Dynamic StateSchema & Dependency Engine Demonstration")
-    print("=" * 70)
-
+def run_scenario_1():
     simulate_scenario(
         "Scenario 1: Direct Doctor Booking (User knows doctor)",
         [
@@ -96,6 +92,8 @@ def run_all_scenarios():
         ],
     )
 
+
+def run_scenario_2():
     simulate_scenario(
         "Scenario 2: Department Booking (User knows department)",
         [
@@ -119,6 +117,8 @@ def run_all_scenarios():
         ],
     )
 
+
+def run_scenario_3():
     simulate_scenario(
         "Scenario 3: Symptom-Based Booking (System classifies department)",
         [
@@ -149,6 +149,8 @@ def run_all_scenarios():
         ],
     )
 
+
+def run_scenario_4():
     simulate_scenario(
         "Scenario 4: End-to-End Real Booking Flow (Department -> Doctor Candidates -> Slot Selection -> Execution)",
         [
@@ -191,6 +193,8 @@ def run_all_scenarios():
         ],
     )
 
+
+def run_scenario_5():
     simulate_scenario(
         "Scenario 5: SLM Ambiguity & Fallback to General Medicine (User Undecided)",
         [
@@ -226,6 +230,18 @@ def run_all_scenarios():
             },
         ],
     )
+
+
+def run_all_scenarios():
+    print("=" * 70)
+    print("HealthOS Dynamic StateSchema & Dependency Engine Demonstration")
+    print("=" * 70)
+
+    run_scenario_1()
+    run_scenario_2()
+    run_scenario_3()
+    run_scenario_4()
+    run_scenario_5()
 
 
 def interactive_demo():

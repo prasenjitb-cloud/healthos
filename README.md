@@ -43,6 +43,7 @@ HEALTHOS/
 │     ├── dependency_engine.py
 │     ├── greeter_agent.py
 │     ├── guardrail_agent.py
+│     ├── observability.py
 │     ├── response_generator_agent.py
 │     ├── run_custom_pipeline.py
 │     ├── slm_engine.py

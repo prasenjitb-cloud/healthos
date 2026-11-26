@@ -43,10 +43,20 @@ except ImportError:
         is_dependency_satisfied,
     )
 
+try:
+    from observability import traceable
+except ImportError:
+    try:
+        from agents.observability import traceable
+    except ImportError:
+        def traceable(*args, **kwargs):
+            return lambda fn: fn
+
 
 class DependencyEngine:
 
 
+    @traceable(name="Dependency_Resolution_Engine", run_type="chain", tags=["state_machine", "routing"])
     def get_next_action(
         self,
         schema: Dict[str, Any],

@@ -20,6 +20,15 @@ try:
 except ImportError:
     transformers = None
 
+try:
+    from observability import traceable
+except ImportError:
+    try:
+        from agents.observability import traceable
+    except ImportError:
+        def traceable(*args, **kwargs):
+            return lambda fn: fn
+
 
 def load_config(config_file: str) -> dict:
     with open(config_file, "r", encoding="utf-8") as f:
@@ -82,6 +91,7 @@ def generate_response(slm, model_config, prompt: str):
     return output["choices"][0]["text"].strip()
 
 
+@traceable(name="ToxicBERT_Safety_Guardrail", run_type="tool", tags=["safety", "guardrail"])
 def check_safety(guard_model, config_data: Any, text: str, slm_engine=None) -> Tuple[bool, float]:
     """
     Evaluates whether text is safe.
